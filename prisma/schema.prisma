@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type CloudinaryImage {
+  url      String
+  publicId String
+}
+
+type GalleryImage {
+  url      String
+  publicId String
+  alt      String?
+}
+
+type ExternalLink {
+  label String
+  url   String
+}
+
+model Reference {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String @unique
+  description String?
+
+  mainImage CloudinaryImage
+  gallery   GalleryImage[]
+  links     ExternalLink[]
+
+  typeId String @db.ObjectId
+
+  areaIds       String[] @db.ObjectId
+  tagIds        String[] @db.ObjectId
+  collectionIds String[] @db.ObjectId
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+}
+
+model Collection {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String @unique
+  description String?
+
+  coverImage CloudinaryImage
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+}
+
+model Type {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Area {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
