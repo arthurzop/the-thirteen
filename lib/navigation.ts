@@ -1,9 +1,8 @@
-
 export type NavigationItem = {
   label: string;
   href: string;
   icon: IconName;
-  dividerBefore?: boolean
+  dividerBefore?: boolean;
 };
 
 export type IconName =
@@ -37,40 +36,18 @@ export const publicNavigation: NavigationItem[] = [
     label: "About",
     href: "/about",
     icon: "Info",
-    dividerBefore: true
+    dividerBefore: true,
   },
 ] as const;
 
 export const adminNavigation: NavigationItem[] = [
-  {
-    label: "Dashboard",
-    href: "/admin/dashboard",
-    icon: "LayoutDashboard",
-  },
-  {
-    label: "Collections",
-    href: "/admin/Collections",
-    icon: "LibraryBig",
-  },
-  {
-    label: "Types",
-    href: "/admin/types",
-    icon: "LayoutGrid",
-  },
-  {
-    label: "Areas",
-    href: "/admin/areas",
-    icon: "Scan",
-  },
-  {
-    label: "Tags",
-    href: "/admin/tags",
-    icon: "Tag",
-  },
+  { label: "Dashboard", href: "/admin", icon: "LayoutDashboard" },
+  { label: "Collections", href: "/admin/collections", icon: "LibraryBig" },
+  { label: "Taxonomy", href: "/admin/taxonomy", icon: "LayoutGrid" },
   {
     label: "Settings",
-    href: "/admin/Settings",
+    href: "/admin/settings",
     icon: "Settings",
-    dividerBefore: true
+    dividerBefore: true,
   },
 ];

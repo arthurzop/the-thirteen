@@ -41,3 +41,15 @@ export type ReferenceDetailData = ReferenceCardData & {
   metadata?: { label: string; value: string }[];
   createdAt: string;
 };
+
+export type AdminReferenceRow = {
+  id: string;
+  slug: string;
+  title: string;
+  mainImage: { url: string; width: number; height: number };
+  type: { id: string; name: string; slug: string };
+  areas: { id: string; name: string; slug: string }[];
+  tags: { id: string; name: string; slug: string }[];
+  createdAt: Date;
+  updatedAt: Date;
+};

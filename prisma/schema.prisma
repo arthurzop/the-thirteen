@@ -10,12 +10,16 @@ datasource db {
 type CloudinaryImage {
   url      String
   publicId String
+  width    Int
+  height   Int
 }
 
 type GalleryImage {
   url      String
   publicId String
   alt      String?
+  width    Int
+  height   Int
 }
 
 type ExternalLink {
