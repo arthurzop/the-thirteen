@@ -4,11 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import * as L from "lucide-react";
 
 import { useDebounce } from "@/hooks/use-debounce";
-// import { searchSuggestions } from "@/lib/search";
+import { searchSuggestions } from "@/actions/search/suggestions";
+import type { SearchSuggestion, SearchSuggestionType } from "@/types/search";
 
 type SearchInputProps = {
-  onSearch?: (query: string) => Promise<string[]>;
-  onSelect?: (value: string) => void;
+  onSearch?: (query: string) => Promise<SearchSuggestion[]>;
+  onSelect?: (suggestion: SearchSuggestion) => void;
+};
+
+const typeIcons: Record<SearchSuggestionType, L.LucideIcon> = {
+  reference: L.Image,
+  collection: L.LibraryBig,
+  tag: L.Tag,
+  area: L.Scan,
+  type: L.LayoutGrid,
+};
+
+const typeLabels: Record<SearchSuggestionType, string> = {
+  reference: "Reference",
+  collection: "Collection",
+  tag: "Tag",
+  area: "Area",
+  type: "Type",
 };
 
 function highlightMatch(text: string, query: string) {
@@ -39,12 +56,11 @@ export default function SearchInput({
 
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
   const debouncedValue = useDebounce(value, 250);
 
-  // Atalho ⌘K / Ctrl+K
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const isMac = navigator.platform.toUpperCase().includes("MAC");
@@ -62,7 +78,6 @@ export default function SearchInput({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Fecha o dropdown ao clicar fora (input + lista)
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (!containerRef.current?.contains(event.target as Node)) {
@@ -74,7 +89,6 @@ export default function SearchInput({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Dispara a busca (mock ou real, via prop) quando o valor com debounce muda
   useEffect(() => {
     const query = debouncedValue.trim();
 
@@ -105,8 +119,8 @@ export default function SearchInput({
     inputRef.current?.focus();
   }
 
-  function handleSelect(suggestion: string) {
-    setValue(suggestion);
+  function handleSelect(suggestion: SearchSuggestion) {
+    setValue(suggestion.label);
     setIsFocused(false);
     onSelect?.(suggestion);
   }
@@ -156,17 +170,31 @@ export default function SearchInput({
         <div className="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-2xl border border-gs-600 bg-night-black">
           {suggestions.length > 0 ? (
             <ul className="max-h-64 overflow-y-auto">
-              {suggestions.map((suggestion) => (
-                <li key={suggestion}>
-                  <button
-                    type="button"
-                    onClick={() => handleSelect(suggestion)}
-                    className="w-full px-4 py-3 text-left text-sm text-gs-400 transition-colors hover:bg-gs-800 cursor-pointer"
-                  >
-                    {highlightMatch(suggestion, value)}
-                  </button>
-                </li>
-              ))}
+              {suggestions.map((suggestion) => {
+                const Icon = typeIcons[suggestion.type];
+
+                return (
+                  <li key={suggestion.id}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(suggestion)}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-gs-400 transition-colors hover:bg-gs-800 cursor-pointer"
+                    >
+                      <Icon
+                        size={14}
+                        strokeWidth={1.5}
+                        className="shrink-0 text-gs-600"
+                      />
+                      <span className="flex-1">
+                        {highlightMatch(suggestion.label, value)}
+                      </span>
+                      <span className="shrink-0 text-xs text-gs-600">
+                        {typeLabels[suggestion.type]}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             hasSearched && (

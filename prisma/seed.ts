@@ -1,7 +1,8 @@
+import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma";
 
 async function main() {
-  console.log("🧹 Clearing database...");
+  console.log("🧹 Clearing content data...");
 
   await prisma.reference.deleteMany();
   await prisma.collection.deleteMany();
@@ -11,40 +12,82 @@ async function main() {
 
   console.log("🌱 Seeding Types...");
 
-  await prisma.type.createMany({
-    data: [
-      { name: "Website", slug: "website" },
-      { name: "Designer", slug: "designer" },
-      { name: "Studio", slug: "studio" },
-      { name: "Brand", slug: "brand" },
-      { name: "Tool", slug: "tool" },
-      { name: "Book", slug: "book" },
-      { name: "Project", slug: "project" },
-      { name: "Product", slug: "product" },
-      { name: "Visual Asset", slug: "visual-asset" },
-      { name: "Font", slug: "font" },
-    ],
+  const website = await prisma.type.create({
+    data: { name: "Website", slug: "website" },
+  });
+  const designer = await prisma.type.create({
+    data: { name: "Designer", slug: "designer" },
+  });
+  const studio = await prisma.type.create({
+    data: { name: "Studio", slug: "studio" },
+  });
+  const brand = await prisma.type.create({
+    data: { name: "Brand", slug: "brand" },
+  });
+  const tool = await prisma.type.create({
+    data: { name: "Tool", slug: "tool" },
+  });
+  const book = await prisma.type.create({
+    data: { name: "Book", slug: "book" },
+  });
+  const project = await prisma.type.create({
+    data: { name: "Project", slug: "project" },
+  });
+  const product = await prisma.type.create({
+    data: { name: "Product", slug: "product" },
+  });
+  const visualAsset = await prisma.type.create({
+    data: { name: "Visual Asset", slug: "visual-asset" },
+  });
+  const font = await prisma.type.create({
+    data: { name: "Font", slug: "font" },
   });
 
-  console.log("🌱 Seeding Areas...");
+  console.log("🌱 Seeding Areas (scoped by Type)...");
 
   await prisma.area.createMany({
     data: [
-      { name: "UI", slug: "ui" },
-      { name: "UX", slug: "ux" },
-      { name: "Branding", slug: "branding" },
-      { name: "Editorial", slug: "editorial" },
-      { name: "Typography", slug: "typography" },
-      { name: "Packaging", slug: "packaging" },
-      { name: "Photography", slug: "photography" },
-      { name: "Illustration", slug: "illustration" },
-      { name: "Motion", slug: "motion" },
-      { name: "3D", slug: "3d" },
-      { name: "Industrial Design", slug: "industrial-design" },
-      { name: "Product Design", slug: "product-design" },
-      { name: "Creative Coding", slug: "creative-coding" },
-      { name: "Architecture", slug: "architecture" },
-      { name: "Art Direction", slug: "art-direction" },
+      { name: "UI", slug: "ui", typeId: website.id },
+      { name: "UX", slug: "ux", typeId: website.id },
+      { name: "Landing Page", slug: "landing-page", typeId: website.id },
+      { name: "E-commerce", slug: "ecommerce", typeId: website.id },
+      { name: "Dashboard", slug: "dashboard", typeId: website.id },
+
+      { name: "Branding", slug: "branding", typeId: designer.id },
+      { name: "UI", slug: "ui", typeId: designer.id },
+      { name: "Illustration", slug: "illustration", typeId: designer.id },
+
+      { name: "Branding", slug: "branding", typeId: studio.id },
+      { name: "Identity", slug: "identity", typeId: studio.id },
+      { name: "Art Direction", slug: "art-direction", typeId: studio.id },
+
+      { name: "Branding", slug: "branding", typeId: brand.id },
+      { name: "Packaging", slug: "packaging", typeId: brand.id },
+
+      { name: "Design", slug: "design", typeId: tool.id },
+      { name: "Productivity", slug: "productivity", typeId: tool.id },
+
+      { name: "Editorial", slug: "editorial", typeId: book.id },
+      { name: "Typography", slug: "typography", typeId: book.id },
+
+      { name: "Branding", slug: "branding", typeId: project.id },
+      { name: "UI", slug: "ui", typeId: project.id },
+      { name: "Editorial", slug: "editorial", typeId: project.id },
+
+      {
+        name: "Industrial Design",
+        slug: "industrial-design",
+        typeId: product.id,
+      },
+      { name: "Product Design", slug: "product-design", typeId: product.id },
+      { name: "Packaging", slug: "packaging", typeId: product.id },
+
+      { name: "Photography", slug: "photography", typeId: visualAsset.id },
+      { name: "Illustration", slug: "illustration", typeId: visualAsset.id },
+      { name: "3D", slug: "3d", typeId: visualAsset.id },
+      { name: "Motion", slug: "motion", typeId: visualAsset.id },
+
+      { name: "Typography", slug: "typography", typeId: font.id },
     ],
   });
 
@@ -77,9 +120,6 @@ async function main() {
       { name: "Concept", slug: "concept" },
       { name: "Icons", slug: "icons" },
       { name: "Portfolio", slug: "portfolio" },
-      { name: "Landing Page", slug: "landing-page" },
-      { name: "Dashboard", slug: "dashboard" },
-      { name: "E-commerce", slug: "ecommerce" },
       { name: "Mobile", slug: "mobile" },
       { name: "Desktop", slug: "desktop" },
     ],
@@ -93,38 +133,49 @@ async function main() {
         title: "Favorite Websites",
         slug: "favorite-websites",
         description: "Personal selection of inspiring websites.",
-        coverImage: {
-          url: "",
-          publicId: "",
-        },
+        coverImage: { url: "", publicId: "" },
       },
       {
         title: "Typography Collection",
         slug: "typography-collection",
         description: "References focused on typography.",
-        coverImage: {
-          url: "",
-          publicId: "",
-        },
+        coverImage: { url: "", publicId: "" },
       },
       {
         title: "Editorial Inspiration",
         slug: "editorial-inspiration",
         description: "Editorial and publication references.",
-        coverImage: {
-          url: "",
-          publicId: "",
-        },
+        coverImage: { url: "", publicId: "" },
       },
     ],
   });
+
+  console.log("🔐 Ensuring admin Settings exist...");
+
+  const existingSettings = await prisma.settings.findFirst();
+
+  if (!existingSettings) {
+    const defaultPassword = process.env.ADMIN_PASSWORD;
+
+    if (!defaultPassword) {
+      throw new Error(
+        "ADMIN_PASSWORD is not set in .env — cannot create initial Settings.",
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(defaultPassword, 10);
+    await prisma.settings.create({ data: { passwordHash } });
+    console.log("   → Settings created from ADMIN_PASSWORD.");
+  } else {
+    console.log("   → Settings already exist, skipping (password preserved).");
+  }
 
   console.log("✅ Seed completed.");
 }
 
 main()
   .catch((error) => {
-    console.error(error);
+    console.error("❌ Seed failed:", error);
     process.exit(1);
   })
   .finally(async () => {

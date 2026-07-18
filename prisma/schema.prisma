@@ -24,9 +24,9 @@ type ExternalLink {
 }
 
 model Reference {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  slug        String @unique
+  slug        String  @unique
   description String?
 
   mainImage CloudinaryImage
@@ -34,23 +34,37 @@ model Reference {
   links     ExternalLink[]
 
   typeId String @db.ObjectId
+  type   Type   @relation(fields: [typeId], references: [id])
 
-  areaIds       String[] @db.ObjectId
-  tagIds        String[] @db.ObjectId
-  collectionIds String[] @db.ObjectId
+  areaIds String[] @db.ObjectId
+  areas   Area[]   @relation(fields: [areaIds], references: [id])
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tagIds String[] @db.ObjectId
+  tags   Tag[]    @relation(fields: [tagIds], references: [id])
+
+  collectionIds String[]     @db.ObjectId
+  collections   Collection[] @relation(fields: [collectionIds], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   publishedAt DateTime?
+
+  @@index([typeId])
+  @@index([areaIds])
+  @@index([tagIds])
+  @@index([title, description])
 }
 
 model Collection {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  slug        String @unique
+  slug        String  @unique
   description String?
 
   coverImage CloudinaryImage
+
+  referenceIds String[]    @db.ObjectId
+  references   Reference[] @relation(fields: [referenceIds], references: [id])
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -62,6 +76,9 @@ model Type {
   name String
   slug String @unique
 
+  areas      Area[]
+  references Reference[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -69,10 +86,19 @@ model Type {
 model Area {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  slug String @unique
+  slug String
+
+  typeId String @db.ObjectId
+  type   Type   @relation(fields: [typeId], references: [id])
+
+  referenceIds String[]    @db.ObjectId
+  references   Reference[] @relation(fields: [referenceIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([typeId, slug])
+  @@index([typeId])
 }
 
 model Tag {
@@ -80,6 +106,15 @@ model Tag {
   name String
   slug String @unique
 
+  referenceIds String[]    @db.ObjectId
+  references   Reference[] @relation(fields: [referenceIds], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  passwordHash String
+  updatedAt    DateTime @updatedAt
 }
