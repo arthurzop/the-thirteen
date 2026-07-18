@@ -1,22 +1,40 @@
 import SearchInput from "@/components/ui/SearchInput";
-import Filterbar from "@/components/reference/filterBar";
+import ReferenceBrowser from "@/components/reference/referenceBrowser";
 import { getTypes } from "@/actions/types/get";
 import { getTags } from "@/actions/tags/get";
-import ReferenceBrowser from "@/components/reference/referenceBrowser";
-import { mockReferences } from "@/lib/mock/reference";
-import { mock } from "node:test";
+import { getReferences } from "@/actions/references/get";
+import type { ReferenceDetailData } from "@/types/reference";
 
-const [types, tags] = await Promise.all([getTypes(), getTags()]);
+export default async function Home() {
+  const [types, tags, rawReferences] = await Promise.all([
+    getTypes(),
+    getTags(),
+    getReferences(),
+  ]);
 
-export default function Home() {
+  const references: ReferenceDetailData[] = rawReferences.map((reference) => ({
+    id: reference.id,
+    slug: reference.slug,
+    title: reference.title,
+    subtitle: reference.subtitle ?? undefined,
+    description: reference.description ?? undefined,
+    mainImage: reference.mainImage,
+    gallery: reference.gallery,
+    links: reference.links,
+    metadata: reference.metadata,
+    type: { name: reference.type.name, slug: reference.type.slug },
+    areas: reference.areas.map((area) => ({
+      name: area.name,
+      slug: area.slug,
+    })),
+    tags: reference.tags.map((tag) => ({ name: tag.name, slug: tag.slug })),
+    createdAt: reference.createdAt.toISOString(),
+  }));
+
   return (
-    <main className="px-8 py-8 gap-4 flex flex-col min-h-screen">
+    <main className="flex min-h-screen flex-col gap-4 px-8 py-8">
       <SearchInput />
-      <ReferenceBrowser
-        types={types}
-        tags={tags}
-        references={mockReferences}
-      ></ReferenceBrowser>
+      <ReferenceBrowser types={types} tags={tags} references={references} />
     </main>
   );
 }

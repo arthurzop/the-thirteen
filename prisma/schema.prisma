@@ -27,15 +27,22 @@ type ExternalLink {
   url   String
 }
 
+type MetadataField {
+  label String
+  value String
+}
+
 model Reference {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   slug        String  @unique
   description String?
+  subtitle String?
 
   mainImage CloudinaryImage
   gallery   GalleryImage[]
   links     ExternalLink[]
+  metadata  MetadataField[]
 
   typeId String @db.ObjectId
   type   Type   @relation(fields: [typeId], references: [id])

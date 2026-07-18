@@ -46,7 +46,18 @@ export type AdminReferenceRow = {
   id: string;
   slug: string;
   title: string;
-  mainImage: { url: string; width: number; height: number };
+  subtitle?: string | null;
+  description?: string | null;
+  mainImage: { url: string; publicId: string; width: number; height: number };
+  gallery: {
+    url: string;
+    publicId: string;
+    width: number;
+    height: number;
+    alt?: string | null;
+  }[];
+  links: { label: string; url: string }[];
+  metadata: { label: string; value: string }[];
   type: { id: string; name: string; slug: string };
   areas: { id: string; name: string; slug: string }[];
   tags: { id: string; name: string; slug: string }[];

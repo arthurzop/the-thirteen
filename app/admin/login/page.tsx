@@ -2,13 +2,18 @@
 
 import { useActionState } from "react";
 import { login } from "@/actions/auth/login";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(login, undefined);
 
   return (
     <main className="flex h-screen items-center justify-center bg-true-black px-4">
-      <form action={formAction} className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-gs-800 p-8">
+      <form
+        action={formAction}
+        className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-gs-800 p-8"
+      >
         <div>
           <h1 className="text-lg font-medium text-off-white">The Thirteen</h1>
           <p className="text-sm text-gs-500">Admin access</p>
@@ -29,8 +34,14 @@ export default function LoginPage() {
           disabled={isPending}
           className="cursor-pointer rounded-full bg-off-white py-3 text-sm font-medium text-true-black transition-colors hover:bg-gs-100 disabled:opacity-50"
         >
-          {isPending ? "Entering..." : "Enter"}
+          {isPending ? "Loggin in..." : "Login"}
         </button>
+        <div className="flex w-full items-center justify-center text-sm text-gs-500 gap-2 hover:text-gs-300">
+          <ArrowLeft size={16} strokeWidth={1.5}/>
+          <Link href="/" className="">
+            Back to Home
+          </Link>
+        </div>
       </form>
     </main>
   );

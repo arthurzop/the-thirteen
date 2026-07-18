@@ -39,7 +39,7 @@ export default function ReferenceGrid({
   }
 
   return (
-    <div className="columns-2 gap-4 sm:columns-3 lg:columns-4">
+    <div className="columns-2 gap-4 sm:columns-3 lg:columns-5">
       {references.map((reference) => (
         <div key={reference.id} className="mb-4 break-inside-avoid">
           <ReferenceCard

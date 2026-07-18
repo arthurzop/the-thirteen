@@ -52,6 +52,19 @@ export default function AdminDashboard({
     });
   }, [references, query, typeFilter, areaFilter, tagFilter]);
 
+  const [editingReference, setEditingReference] =
+    useState<AdminReferenceRow | null>(null);
+
+  function openCreate() {
+    setEditingReference(null);
+    setIsPanelOpen(true);
+  }
+
+  function openEdit(reference: AdminReferenceRow) {
+    setEditingReference(reference);
+    setIsPanelOpen(true);
+  }
+
   return (
     <div className="flex flex-col gap-6 px-8 py-8">
       <div className="flex items-start justify-between">
@@ -64,7 +77,7 @@ export default function AdminDashboard({
 
         <button
           type="button"
-          onClick={() => setIsPanelOpen(true)}
+          onClick={() => openCreate()}
           className="flex items-center gap-2 rounded-full bg-off-white px-4 py-2 text-sm font-medium text-true-black hover:bg-gs-100 cursor-pointer"
         >
           <Plus size={16} strokeWidth={2} />
@@ -101,12 +114,17 @@ export default function AdminDashboard({
         />
       </div>
 
-      <ReferenceTable references={filtered} onDeleted={refresh} />
+      <ReferenceTable
+        onEdit={openEdit}
+        references={filtered}
+        onDeleted={refresh}
+      />
 
       <ReferenceFormPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
-        onCreated={refresh}
+        onSaved={refresh}
+        initialData={editingReference}
         types={types}
         areas={areas}
         tags={tags}

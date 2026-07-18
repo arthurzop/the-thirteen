@@ -82,18 +82,32 @@ export default function ImageDropzone({
         setIsDragging(false);
         addFiles(e.dataTransfer.files);
       }}
-      onClick={() => inputRef.current?.click()}
-      className={`flex h-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors ${
-        isDragging ? "border-gs-600 bg-gs-900" : "border-gs-800"
-      }`}
+      onClick={() => {
+        if (files.length === 0) inputRef.current?.click();
+      }}
+      className={`relative flex h-40 flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors ${
+        files.length === 0 ? "cursor-pointer" : ""
+      } ${isDragging ? "border-gs-600 bg-gs-900" : "border-gs-800"}`}
     >
       {files[0] ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={URL.createObjectURL(files[0])}
-          alt=""
-          className="h-full w-full rounded-xl object-cover"
-        />
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={URL.createObjectURL(files[0])}
+            alt=""
+            className="h-full w-full rounded-xl object-cover"
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange([]);
+            }}
+            className="absolute top-2 right-2 rounded-full bg-true-black/80 p-1.5 text-off-white cursor-pointer"
+          >
+            <X size={14} strokeWidth={2} />
+          </button>
+        </>
       ) : (
         <>
           <Upload size={18} strokeWidth={1.5} className="text-gs-500" />

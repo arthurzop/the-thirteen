@@ -17,15 +17,15 @@ export default function ReferenceCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex w-full flex-col gap-3 text-left cursor-pointer border border-gs-900 p-2 rounded-2xl bg-night-black"
+      className="group flex w-full flex-col gap-2 text-left cursor-pointer border border-gs-900 p-2 pb-3 rounded-2xl bg-night-black hover:bg-gs-900"
     >
-      <div className="relative w-full overflow-hidden rounded-xl bg-gs-900">
+      <div className="relative w-full overflow-hidden rounded-lg bg-gs-900">
         <Image
           src={reference.mainImage.url}
           alt={reference.mainImage.alt ?? reference.title}
           width={reference.mainImage.width}
           height={reference.mainImage.height}
-          className="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          className="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
         />
       </div>
 

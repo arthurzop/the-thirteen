@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Pencil, Trash2 } from "lucide-react";
 
+import ConfirmDialog from "@/components/ui/confirmDialog";
 import { deleteReference } from "@/actions/references/delete";
 import { formatRelativeDate } from "@/lib/utils";
 import type { AdminReferenceRow } from "@/types/reference";
@@ -10,15 +12,25 @@ import type { AdminReferenceRow } from "@/types/reference";
 type ReferenceTableProps = {
   references: AdminReferenceRow[];
   onDeleted: () => void;
+  onEdit: (reference: AdminReferenceRow) => void;
 };
 
 export default function ReferenceTable({
   references,
   onDeleted,
+  onEdit,
 }: ReferenceTableProps) {
-  async function handleDelete(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    await deleteReference(id);
+  const [pendingDelete, setPendingDelete] = useState<AdminReferenceRow | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function confirmDelete() {
+    if (!pendingDelete) return;
+    setIsDeleting(true);
+    await deleteReference(pendingDelete.id);
+    setIsDeleting(false);
+    setPendingDelete(null);
     onDeleted();
   }
 
@@ -84,6 +96,7 @@ export default function ReferenceTable({
           <div className="flex w-16 items-center gap-3">
             <button
               type="button"
+              onClick={() => onEdit(reference)}
               className="text-gs-500 hover:text-off-white cursor-pointer"
               aria-label="Edit"
             >
@@ -91,7 +104,7 @@ export default function ReferenceTable({
             </button>
             <button
               type="button"
-              onClick={() => handleDelete(reference.id, reference.title)}
+              onClick={() => setPendingDelete(reference)}
               className="text-gs-500 hover:text-red-400 cursor-pointer"
               aria-label="Delete"
             >
@@ -100,6 +113,19 @@ export default function ReferenceTable({
           </div>
         </div>
       ))}
+
+      <ConfirmDialog
+        isOpen={Boolean(pendingDelete)}
+        title="Are you sure?"
+        description={
+          pendingDelete
+            ? `This will permanently delete "${pendingDelete.title}".`
+            : undefined
+        }
+        confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

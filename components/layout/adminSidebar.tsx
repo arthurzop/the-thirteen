@@ -13,14 +13,19 @@ export default function AdminSidebar() {
         <Navigation items={adminNavigation} />
       </div>
 
-      <form action={logout}>
+      <form action={logout} className="flex flex-col gap-2">
         <button
           type="submit"
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gs-500 transition-colors hover:text-off-white cursor-pointer"
+          className="flex w-full items-center gap-3 px-3 py-2 text-sm text-gs-500 transition-colors hover:text-off-white cursor-pointer bg-night-black rounded-full hover:bg-gs-900"
         >
-          <LogOut size={16} strokeWidth={1.5} />
+          <span className="flex p-2 rounded-full bg-night-black">
+            <LogOut size={16} strokeWidth={1.5} />
+          </span>
           Log out
         </button>
+        <p className="text-gs-700 text-[12px] gap-1 w-full justify-center flex">
+          2026 © <span className="font-medium">Artur Medeiros</span>
+        </p>
       </form>
     </aside>
   );

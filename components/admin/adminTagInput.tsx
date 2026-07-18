@@ -72,7 +72,7 @@ export default function AdminTagInput({
           onBlur={() => setTimeout(() => setIsOpen(false), 100)}
           onKeyDown={handleKeyDown}
           placeholder={value.length === 0 ? "Add Tags.." : ""}
-          className="min-w-[80px] flex-1 bg-transparent text-sm text-off-white outline-none placeholder:text-gs-600"
+          className="min-w-20 flex-1 bg-transparent text-sm text-off-white outline-none placeholder:text-gs-600"
         />
       </div>
 

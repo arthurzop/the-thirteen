@@ -39,8 +39,7 @@ export default function ReferenceModal({
 
   if (!reference) return null;
 
-  const gallery =
-    reference.gallery.length > 0 ? reference.gallery : [reference.mainImage];
+  const gallery = [reference.mainImage, ...reference.gallery];
   const activeImage = gallery[activeIndex];
 
   function goNext() {
@@ -109,7 +108,7 @@ export default function ReferenceModal({
                 src={activeImage.url}
                 alt={activeImage.alt ?? reference.title}
                 fill
-
+                className="object-cover"
               />
             </div>
 
@@ -120,9 +119,9 @@ export default function ReferenceModal({
                     key={image.url + index}
                     type="button"
                     onClick={() => setActiveIndex(index)}
-                    className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition-colors ${
+                    className={`cursor-pointer hover:scale-[1.05] relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition-colors ${
                       index === activeIndex
-                        ? "border-off-white"
+                        ? "scale-[1.05] border-off-white"
                         : "border-transparent"
                     }`}
                   >
@@ -139,7 +138,7 @@ export default function ReferenceModal({
           </div>
 
           {/*informações */}
-          <div className="flex max-w-80 shrink-0 flex-col gap-6 overflow-y-auto rounded-2xl border border-gs-800 p-6 bg-gs-900">
+          <div className="flex max-w-80 min-w-80 shrink-0 flex-col gap-6 overflow-y-auto rounded-2xl border border-gs-800 p-6 bg-gs-900">
             <div className="flex flex-col">
               <span className="text-xs tracking-wide text-gs-500 uppercase">
                 {reference.type.name}
