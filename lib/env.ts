@@ -15,7 +15,6 @@ const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
   console.error(parsed.error.issues);
-  );
   throw new Error("Invalid environment variables");
 }
 
