@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import type { ReferenceCardData } from "@/types/reference";
 import type { ViewMode } from "@/types/filters";
 import ReferenceCard from "@/components/reference/referenceCard";
