@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { deleteImage } from "@/lib/cloudinary/upload";
-
+import { revalidateReferences } from "@/lib/revalidate";
 export async function deleteCollection(id: string) {
   const collection = await prisma.collection.findUnique({ where: { id } });
   if (!collection) return;
@@ -14,5 +14,5 @@ export async function deleteCollection(id: string) {
     await deleteImage(collection.coverImage.publicId);
   }
 
-  revalidatePath("/admin/collections");
+  revalidateReferences();
 }

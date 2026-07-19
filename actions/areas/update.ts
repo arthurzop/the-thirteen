@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
-
+import { revalidateReferences } from "@/lib/revalidate";
 export async function updateArea(
   id: string,
   { name, typeId }: { name: string; typeId: string },
@@ -11,5 +11,5 @@ export async function updateArea(
     where: { id },
     data: { name, slug: slugify(name), typeId },
   });
-  revalidatePath("/admin/taxonomy");
+  revalidateReferences();
 }

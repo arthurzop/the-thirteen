@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
-
+import { revalidateReferences } from "@/lib/revalidate";
 export async function createCollection(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string | null;
@@ -28,5 +28,5 @@ export async function createCollection(formData: FormData) {
     },
   });
 
-  revalidatePath("/admin/collections");
+  revalidateReferences();
 }

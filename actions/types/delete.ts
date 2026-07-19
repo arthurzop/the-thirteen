@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-
+import { revalidateReferences } from "@/lib/revalidate";
 export async function deleteType(id: string) {
   const [areaCount, referenceCount] = await Promise.all([
     prisma.area.count({ where: { typeId: id } }),
@@ -15,5 +15,5 @@ export async function deleteType(id: string) {
   }
 
   await prisma.type.delete({ where: { id } });
-  revalidatePath("/admin/taxonomy");
+  revalidateReferences();
 }

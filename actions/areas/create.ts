@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
+import { revalidateReferences } from "@/lib/revalidate";
 
 export async function createArea({
   name,
@@ -15,5 +16,6 @@ export async function createArea({
   if (existing)
     throw new Error("An Area with this name already exists for this Type.");
   await prisma.area.create({ data: { name, slug, typeId } });
-  revalidatePath("/admin/taxonomy");
+  
+  revalidateReferences();
 }

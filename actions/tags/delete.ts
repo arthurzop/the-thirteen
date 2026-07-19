@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-
+import { revalidateReferences } from "@/lib/revalidate";
 export async function deleteTag(id: string) {
   const referenceCount = await prisma.reference.count({
     where: { tagIds: { has: id } },
@@ -12,5 +12,6 @@ export async function deleteTag(id: string) {
     );
   }
   await prisma.tag.delete({ where: { id } });
-  revalidatePath("/admin/taxonomy");
+
+  revalidateReferences();
 }

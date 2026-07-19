@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
-
+import { revalidateReferences } from "@/lib/revalidate";
 async function findOrCreateTag(name: string) {
   const slug = slugify(name);
   const existing = await prisma.tag.findUnique({ where: { slug } });
@@ -61,5 +61,5 @@ export async function createReference(formData: FormData) {
     },
   });
 
-  revalidatePath("/admin");
+  revalidateReferences();
 }
