@@ -17,7 +17,12 @@ export function mapReferenceToDetailData(
     subtitle: reference.subtitle ?? undefined,
     description: reference.description ?? undefined,
     mainImage: reference.mainImage,
-    gallery: reference.gallery,
+    gallery: reference.gallery.map((image) => ({
+      url: image.url,
+      width: image.width,
+      height: image.height,
+      alt: image.alt ?? undefined,
+    })),
     links: reference.links,
     metadata: reference.metadata,
     type: { name: reference.type.name, slug: reference.type.slug },
