@@ -128,7 +128,7 @@ export default function SearchInput({
   const showDropdown = isFocused && value.trim().length > 0;
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} className="hidden md:relative w-full">
       <div
         className={`flex w-full items-center gap-3 rounded-full border bg-night-black px-4 py-2 transition-colors ${
           isFocused ? "border-gs-600" : "border-gs-800"

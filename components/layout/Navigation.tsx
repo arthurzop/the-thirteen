@@ -1,6 +1,5 @@
 "use client";
 
-import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -32,41 +31,35 @@ const icons: Record<IconName, LucideIcon> = {
 
 type NavigationProps = {
   items: NavigationItem[];
+  onNavigate?: () => void;
 };
 
-export default function Navigation({ items }: NavigationProps) {
+export default function Navigation({ items, onNavigate }: NavigationProps) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Main navigation" className="w-full">
-      <ul className="flex flex-col gap-3">
+    <nav aria-label="Main navigation">
+      <ul className="flex flex-col gap-2">
         {items.map(({ label, href, icon, dividerBefore }) => {
           const Icon = icons[icon];
           const isActive = pathname === href;
 
           return (
-            <div key={href}>
-              {dividerBefore && (
-                <div
-                  role="separator"
-                  aria-hidden="true"
-                  className="my-2 h-px bg-gs-800"
-                />
-              )}
-              <div className="">
-                <Link
-                  href={href}
-                  className={`flex w-full h-auto items-center gap-2 rounded-sm px-3 py-3 font-normal ${
-                    isActive
-                      ? "bg-gs-800 text-off-white"
-                      : "text-gs-500 hover:bg-night-black hover:text-off-white"
-                  }`}
-                >
-                  <Icon size={18} strokeWidth={1.5} />
-                  <span className="">{label}</span>
-                </Link>
-              </div>
-            </div>
+            <li key={href}>
+              {dividerBefore && <div className="my-2 h-px bg-gs-800" />}
+              <Link
+                href={href}
+                onClick={onNavigate}
+                className={`flex h-auto items-center gap-2 rounded-lg px-3 py-3 font-normal transition-colors duration-200 ${
+                  isActive
+                    ? "bg-gs-800 text-off-white"
+                    : "text-gs-500 hover:bg-night-black hover:text-off-white"
+                }`}
+              >
+                <Icon size={18} strokeWidth={1.5} />
+                <span>{label}</span>
+              </Link>
+            </li>
           );
         })}
       </ul>

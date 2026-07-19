@@ -15,7 +15,7 @@ export default async function Home() {
   const references = rawReferences.map(mapReferenceToDetailData);
 
   return (
-    <main className="flex min-h-screen flex-col gap-4 px-8 py-8">
+    <main className="flex min-h-screen flex-col gap-4 px-4 py-4 md:px-8 md:py-8">
       <SearchInput />
       <ReferenceBrowser types={types} tags={tags} references={references} />
     </main>

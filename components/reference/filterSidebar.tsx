@@ -55,12 +55,21 @@ export default function FiltersSidebar({
         className="fixed inset-0 z-20 bg-overlay"
       />
 
-      <aside className="fixed top-0 right-0 z-30 flex h-screen w-[320px] flex-col justify-between border-l border-gs-800 bg-night-black p-6">
+      <aside className="fixed top-0 right-0 z-30 flex h-screen w-full flex-col justify-between border-l border-gs-800 bg-night-black p-6 sm:w-[320px]">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-medium text-off-white">Filters</h2>
-            <button type="button" onClick={onClose} aria-label="Close filters" className="cursor-pointer">
-              <X size={18} strokeWidth={1.5} className="text-gs-500 hover:text-off-white" />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close filters"
+              className="cursor-pointer"
+            >
+              <X
+                size={18}
+                strokeWidth={1.5}
+                className="text-gs-500 hover:text-off-white"
+              />
             </button>
           </div>
 
@@ -80,7 +89,10 @@ export default function FiltersSidebar({
             </label>
 
             {types.map((type) => (
-              <label key={type.slug} className="flex items-center gap-3 text-sm text-gs-300">
+              <label
+                key={type.slug}
+                className="flex items-center gap-3 text-sm text-gs-300"
+              >
                 <input
                   type="checkbox"
                   checked={draftFilters.typeSlugs.includes(type.slug)}
@@ -100,7 +112,9 @@ export default function FiltersSidebar({
             <TagInput
               options={tags}
               selectedSlugs={draftFilters.tagSlugs}
-              onChange={(tagSlugs) => onDraftChange({ ...draftFilters, tagSlugs })}
+              onChange={(tagSlugs) =>
+                onDraftChange({ ...draftFilters, tagSlugs })
+              }
               placeholder="Search tags..."
             />
           </div>
