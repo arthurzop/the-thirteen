@@ -100,7 +100,7 @@ export default function SelectDropdown({
 
       {isOpen && (
         <div
-          className={`absolute top-full z-10 mt-1 w-full min-w-[180px] overflow-hidden rounded-lg border border-gs-800 bg-night-black ${
+          className={`absolute top-full z-10 mt-1 w-full min-w-45 overflow-hidden rounded-lg border border-gs-800 bg-night-black ${
             align === "right" ? "right-0" : "left-0"
           }`}
         >
@@ -131,7 +131,7 @@ export default function SelectDropdown({
                         type="checkbox"
                         checked={selected.includes(option.value)}
                         readOnly
-                        className="h-3.5 w-3.5 accent-off-white"
+                        className="w-4 h-4 cursor-pointer appearance-none rounded border border-gs-700 bg-night-black checked:bg-off-white checked:border-off-white transition"
                       />
                     )}
                     {option.label}
