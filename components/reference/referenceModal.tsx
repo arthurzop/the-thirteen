@@ -108,7 +108,7 @@ export default function ReferenceModal({
                 src={activeImage.url}
                 alt={activeImage.alt ?? reference.title}
                 fill
-                className="object-cover"
+                className="object-contain"
               />
             </div>
 

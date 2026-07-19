@@ -56,7 +56,7 @@ export default function ReferenceTable({
       {references.map((reference) => (
         <div
           key={reference.id}
-          className="grid grid-cols-[1fr_auto_auto_auto_auto_auto] items-center gap-4 border-b border-gs-800 px-2 py-4"
+          className="grid grid-cols-[1fr_auto_auto_auto_auto_auto] items-center gap-4 border-b border-gs-800 px-2 py-4 hover:bg-night-black"
         >
           <div className="flex items-center gap-3">
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gs-900">

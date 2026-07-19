@@ -25,7 +25,7 @@ export default function AreaTable({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       {areas.map((area) => (
         <div
           key={area.id}

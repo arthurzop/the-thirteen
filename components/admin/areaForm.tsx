@@ -81,13 +81,14 @@ export default function AreaForm({
         />
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            maxLength={40}
+            onChange={(e) => setName(e.target.value.slice(0,40))}
             placeholder="Name"
             autoFocus
             className="w-full rounded-lg border border-gs-800 bg-night-black px-3 py-2 text-sm text-off-white outline-none focus:border-gs-600"
           />
           <div className="flex justify-end">
-            <CharCounter current={name.length} max={100} />
+            <CharCounter current={name.length} max={40} />
           </div>
         </div>
 

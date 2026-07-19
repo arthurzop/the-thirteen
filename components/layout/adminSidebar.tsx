@@ -7,13 +7,13 @@ import { logout } from "@/actions/auth/logout";
 
 export default function AdminSidebar() {
   return (
-    <aside className="flex h-screen w-60 shrink-0 flex-col justify-between border-r border-gs-800 px-6 py-8">
+    <aside className="w-60 h-screen px-4 py-8 border-gs-900 border-r flex flex-col justify-between">
       <div className="flex w-full flex-col gap-8">
         <Logo />
         <Navigation items={adminNavigation} />
       </div>
 
-      <form action={logout} className="flex flex-col gap-2 items-center">
+      <form action={logout} className="flex flex-col gap-2">
         <button
           type="submit"
           className="flex w-full items-center gap-3 px-3 py-2 text-sm text-gs-500 transition-colors hover:text-off-white cursor-pointer bg-night-black rounded-full hover:bg-gs-900"
@@ -23,7 +23,7 @@ export default function AdminSidebar() {
           </span>
           Log out
         </button>
-        <p className="text-gs-700 text-[12px] gap-1 w-full justify-center flex">
+        <p className="text-gs-700 text-[12px]">
           2026 © <span className="font-medium">Artur Medeiros</span>
         </p>
       </form>

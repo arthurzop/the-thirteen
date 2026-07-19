@@ -60,7 +60,7 @@ export default function AreasManager({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-y-hidden">
       <div className="flex items-center justify-between gap-3">
         <div className="relative flex-1 max-w-xs">
           <Search

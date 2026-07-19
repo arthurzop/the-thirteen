@@ -26,12 +26,12 @@ export default function ConfirmDialog({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-gs-800 bg-true-black p-6"
+        className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-gs-800 bg-true-black p-6"
       >
         <div>
           <h3 className="text-base font-medium text-off-white">{title}</h3>
           {description && (
-            <p className="mt-1 text-sm text-gs-500">{description}</p>
+            <p className="mt-1 text-sm text-gs-500 max-w-full">{description}</p>
           )}
         </div>
 
