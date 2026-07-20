@@ -19,8 +19,9 @@ export default function TypesMenu({
 }: TypesMenuProps) {
   return (
     <div className="flex w-full items-center gap-3">
-      <div className="flex flex-1 gap-2 overflow-x-auto items-center">
-        <p className="text-sm text-gs-500 uppercase">Types: </p>
+      <div className="flex flex-1 gap-2 overflow-x-auto items-center scrollbar-none [&::-webkit-scrollbar]:hidden  ">
+        <p className="text-sm text-gs-500 uppercase hidden md:block">Types: </p>
+        <p className="text-nowrap text-sm text-gs-500 uppercase block md:hidden">Filter by: </p>
         {types.map((type) => {
           const isSelected = selectedSlugs.includes(type.slug);
 
@@ -45,7 +46,7 @@ export default function TypesMenu({
         type="button"
         onClick={onOpenFilters}
         aria-label="Open filters"
-        className="cursor-pointer flex shrink-0 items-center gap-2 rounded-full border border-gs-900 px-4 py-4 md:py-2 text-sm text-gs-400 transition-colors hover:border-gs-600 hover:text-off-white bg-night-black "
+        className="cursor-pointer flex shrink-0 items-center gap-2 rounded-full border border-gs-900 px-3 py-3 md:py-2 text-sm text-gs-400 transition-colors hover:border-gs-600 hover:text-off-white bg-night-black "
       >
         <SlidersHorizontal size={14} strokeWidth={1.5} />
         <p className="hidden md:block">More Filters</p>

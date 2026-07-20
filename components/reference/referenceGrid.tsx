@@ -41,9 +41,9 @@ export default function ReferenceGrid({
   }
 
   return (
-    <div className="columns-2 gap-4 sm:columns-3 lg:columns-5">
+    <div className="columns-2 gap-2 md:gap-4 md:columns-4 lg:columns-5">
       {references.map((reference) => (
-        <div key={reference.id} className="mb-4 break-inside-avoid">
+        <div key={reference.id} className="mb-2 md:mb-4 break-inside-avoid">
           <ReferenceCard
             reference={reference}
             onClick={() => onOpen(reference)}
