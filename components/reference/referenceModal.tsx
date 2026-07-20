@@ -58,7 +58,7 @@ export default function ReferenceModal({
       }}
     >
       <div
-        className="flex h-full max-h-200 w-full max-w-7xl flex-col gap-2 rounded-2xl bg-night-black p-3"
+        className="flex h-full md:max-h-200 w-full max-w-7xl flex-col gap-2 rounded-2xl bg-night-black p-3"
         onClick={(event) => event.stopPropagation()}
       >
         {/* row de cima */}
@@ -100,10 +100,10 @@ export default function ReferenceModal({
           </button>
         </div>
         {/* row de baixo */}
-        <div className="flex flex-1 items-stretch justify-between gap-2 overflow-hidden">
+        <div className="flex flex-col md:flex-row flex-1 items-stretch justify-between gap-2 overflow-y-auto overflow-x-hidden md:overflow-hidden">
           {/* imagens */}
           <div className="flex flex-1 flex-col gap-2">
-            <div className="relative flex-1 overflow-hidden rounded-2xl">
+            <div className="relative aspect-video md:h-auto md:flex-1 overflow-hidden rounded-2xl">
               <Image
                 src={activeImage.url}
                 alt={activeImage.alt ?? reference.title}
@@ -138,7 +138,7 @@ export default function ReferenceModal({
           </div>
 
           {/*informações */}
-          <div className="flex max-w-80 min-w-80 shrink-0 flex-col gap-6 overflow-y-auto rounded-2xl border border-gs-800 p-6 bg-gs-900">
+          <div className="flex md:max-w-80 min-w-80 shrink-0 flex-col gap-6 md:overflow-y-auto rounded-2xl border border-gs-800 p-6 bg-gs-900">
             <div className="flex flex-col">
               <span className="text-xs tracking-wide text-gs-500 uppercase">
                 {reference.type.name}

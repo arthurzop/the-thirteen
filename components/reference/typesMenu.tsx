@@ -21,7 +21,9 @@ export default function TypesMenu({
     <div className="flex w-full items-center gap-3">
       <div className="flex flex-1 gap-2 overflow-x-auto items-center scrollbar-none [&::-webkit-scrollbar]:hidden  ">
         <p className="text-sm text-gs-500 uppercase hidden md:block">Types: </p>
-        <p className="text-nowrap text-sm text-gs-500 uppercase block md:hidden">Filter by: </p>
+        <p className="text-nowrap text-sm text-gs-500 uppercase block md:hidden">
+          Filter by:{" "}
+        </p>
         {types.map((type) => {
           const isSelected = selectedSlugs.includes(type.slug);
 
@@ -41,7 +43,6 @@ export default function TypesMenu({
           );
         })}
       </div>
-
       <button
         type="button"
         onClick={onOpenFilters}
