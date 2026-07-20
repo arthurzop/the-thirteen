@@ -10,6 +10,7 @@ import type { SearchSuggestion, SearchSuggestionType } from "@/types/search";
 type SearchInputProps = {
   onSearch?: (query: string) => Promise<SearchSuggestion[]>;
   onSelect?: (suggestion: SearchSuggestion) => void;
+  onQueryChange?: (query: string) => void;
 };
 
 const typeIcons: Record<SearchSuggestionType, L.LucideIcon> = {
@@ -50,6 +51,7 @@ function highlightMatch(text: string, query: string) {
 export default function SearchInput({
   onSearch = searchSuggestions,
   onSelect,
+  onQueryChange,
 }: SearchInputProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -112,6 +114,10 @@ export default function SearchInput({
     };
   }, [debouncedValue, onSearch]);
 
+  useEffect(() => {
+    onQueryChange?.(debouncedValue);
+  }, [debouncedValue, onQueryChange]);
+
   function handleClear() {
     setValue("");
     setSuggestions([]);
@@ -128,7 +134,7 @@ export default function SearchInput({
   const showDropdown = isFocused && value.trim().length > 0;
 
   return (
-    <div ref={containerRef} className="hidden md:relative w-full">
+    <div ref={containerRef} className="relative hidden md:block w-full">
       <div
         className={`flex w-full items-center gap-3 rounded-full border bg-night-black px-4 py-2 transition-colors ${
           isFocused ? "border-gs-600" : "border-gs-800"

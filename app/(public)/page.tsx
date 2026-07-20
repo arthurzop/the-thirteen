@@ -1,5 +1,4 @@
-import SearchInput from "@/components/ui/SearchInput";
-import ReferenceBrowser from "@/components/reference/referenceBrowser";
+import HomeShell from "@/components/reference/homeShell";
 import { getTypes } from "@/actions/types/get";
 import { getTags } from "@/actions/tags/get";
 import { getReferences } from "@/actions/references/get";
@@ -16,8 +15,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col gap-4 px-4 py-4 md:px-8 md:py-8">
-      <SearchInput />
-      <ReferenceBrowser types={types} tags={tags} references={references} />
+      <HomeShell types={types} tags={tags} references={references} />
     </main>
   );
 }

@@ -41,22 +41,29 @@ export default function AreasManager({
     name: string;
     typeId: string;
   }) {
-    if (editing) await updateArea(editing.id, { name, typeId });
-    else await createArea({ name, typeId });
+    const result = editing
+      ? await updateArea(editing.id, { name, typeId })
+      : await createArea({ name, typeId });
+
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+
     router.refresh();
   }
 
   async function handleDelete() {
     if (!pendingDelete) return;
-    try {
-      await deleteArea(pendingDelete.id);
-      setPendingDelete(null);
-      router.refresh();
-    } catch (err) {
-      setDeleteError(
-        err instanceof Error ? err.message : "Something went wrong.",
-      );
+
+    const result = await deleteArea(pendingDelete.id);
+
+    if (result?.error) {
+      setDeleteError(result.error);
+      return;
     }
+
+    setPendingDelete(null);
+    router.refresh();
   }
 
   return (

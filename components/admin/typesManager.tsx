@@ -20,22 +20,22 @@ export default function TypesManager({ types }: { types: FilterOption[] }) {
   const [deleteError, setDeleteError] = useState("");
 
   async function handleSave({ name }: { name: string }) {
-    if (editing) await updateType(editing.id, { name });
-    else await createType({ name });
+    const result = editing
+      ? await updateType(editing.id, { name })
+      : await createType({ name });
+    if (result?.error) throw new Error(result.error);
     router.refresh();
   }
 
   async function handleDelete() {
     if (!pendingDelete) return;
-    try {
-      await deleteType(pendingDelete.id);
-      setPendingDelete(null);
-      router.refresh();
-    } catch (err) {
-      setDeleteError(
-        err instanceof Error ? err.message : "Something went wrong.",
-      );
+    const result = await deleteType(pendingDelete.id);
+    if (result?.error) {
+      setDeleteError(result.error);
+      return;
     }
+    setPendingDelete(null);
+    router.refresh();
   }
 
   return (

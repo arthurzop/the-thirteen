@@ -27,7 +27,7 @@ export async function createReference(formData: FormData) {
   const linksRaw = formData.get("links") as string | null;
 
   if (!title || !typeId || !mainImageFile || mainImageFile.size === 0) {
-    throw new Error("Title, Type and Main Image are required.");
+    return { error: "Title, Type and Main Image are required." };
   }
 
   const mainImage = await uploadImage(mainImageFile);

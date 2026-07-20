@@ -12,6 +12,7 @@ type ReferenceBrowserProps = {
   types: FilterOption[];
   tags: FilterOption[];
   references: ReferenceDetailData[];
+  searchQuery?: string;
 };
 
 const EMPTY_FILTERS: FilterState = { typeSlugs: [], tagSlugs: [] };
@@ -20,12 +21,15 @@ export default function ReferenceBrowser({
   types,
   tags,
   references,
+  searchQuery = "",
 }: ReferenceBrowserProps) {
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [selected, setSelected] = useState<ReferenceDetailData | null>(null);
 
   const filteredReferences = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
     return references.filter((reference) => {
       const matchesType =
         filters.typeSlugs.length === 0 ||
@@ -35,9 +39,24 @@ export default function ReferenceBrowser({
         filters.tagSlugs.length === 0 ||
         reference.tags.some((tag) => filters.tagSlugs.includes(tag.slug));
 
-      return matchesType && matchesTags;
+      const matchesQuery =
+        normalizedQuery === "" ||
+        reference.title.toLowerCase().includes(normalizedQuery) ||
+        (reference.subtitle?.toLowerCase().includes(normalizedQuery) ??
+          false) ||
+        (reference.description?.toLowerCase().includes(normalizedQuery) ??
+          false) ||
+        reference.type.name.toLowerCase().includes(normalizedQuery) ||
+        reference.areas.some((area) =>
+          area.name.toLowerCase().includes(normalizedQuery),
+        ) ||
+        reference.tags.some((tag) =>
+          tag.name.toLowerCase().includes(normalizedQuery),
+        );
+
+      return matchesType && matchesTags && matchesQuery;
     });
-  }, [references, filters]);
+  }, [references, filters, searchQuery]);
 
   return (
     <div className="flex flex-col gap-6">

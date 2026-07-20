@@ -9,9 +9,9 @@ export async function deleteType(id: string) {
   ]);
 
   if (areaCount > 0 || referenceCount > 0) {
-    throw new Error(
-      `Can't delete: ${referenceCount} Reference(s) and ${areaCount} Area(s) still use this Type.`,
-    );
+    return {
+      error: `Can't delete: ${referenceCount} Reference(s) and ${areaCount} Area(s) still use this Type.`,
+    };
   }
 
   await prisma.type.delete({ where: { id } });

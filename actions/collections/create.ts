@@ -12,7 +12,7 @@ export async function createCollection(formData: FormData) {
   const coverImageFile = formData.get("coverImage") as File;
 
   if (!title || !coverImageFile || coverImageFile.size === 0) {
-    throw new Error("Title and Cover Image are required.");
+    return { error: "Title and Cover Image are required." };
   }
 
   const coverImage = await uploadImage(coverImageFile);
