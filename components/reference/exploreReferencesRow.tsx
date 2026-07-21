@@ -15,7 +15,7 @@ export default function ExploreReferencesRow({
 
   return (
     <>
-      <div className="flex gap-4 overflow-x-auto pb-2  scrollbar-none">
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
         {references.map((reference) => (
           <button
             key={reference.id}
