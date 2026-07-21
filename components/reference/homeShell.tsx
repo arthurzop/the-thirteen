@@ -10,10 +10,22 @@ type HomeShellProps = {
   types: FilterOption[];
   tags: FilterOption[];
   references: ReferenceDetailData[];
+  initialTypeSlug?: string;
+  initialTagSlug?: string;
+  initialQuery?: string;
+  initialReferenceSlug?: string;
 };
 
-export default function HomeShell({ types, tags, references }: HomeShellProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+export default function HomeShell({
+  types,
+  tags,
+  references,
+  initialTypeSlug,
+  initialTagSlug,
+  initialQuery,
+  initialReferenceSlug,
+}: HomeShellProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery ?? "");
 
   return (
     <>
@@ -23,6 +35,9 @@ export default function HomeShell({ types, tags, references }: HomeShellProps) {
         tags={tags}
         references={references}
         searchQuery={searchQuery}
+        initialTypeSlug={initialTypeSlug}
+        initialTagSlug={initialTagSlug}
+        initialReferenceSlug={initialReferenceSlug}
       />
     </>
   );

@@ -24,6 +24,23 @@ type SearchOverlayProps = {
   onClose: () => void;
 };
 
+function suggestionHref(suggestion: SearchSuggestion): string {
+  switch (suggestion.type) {
+    case "reference":
+      return `/?ref=${suggestion.slug}`;
+    case "collection":
+      return `/collections/${suggestion.slug}`;
+    case "type":
+      return `/?type=${suggestion.slug}`;
+    case "area":
+      return `/?type=${suggestion.slug}`; // ajusta se Area precisar de outro parâmetro
+    case "tag":
+      return `/?tag=${suggestion.slug}`;
+    default:
+      return "/";
+  }
+}
+
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
@@ -33,7 +50,6 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
   useEffect(() => {
     if (!isOpen) return;
-
     Promise.all([getTypes(), getMostUsedTags(8), getCollections(5)]).then(
       ([typesData, tagsData, collectionsData]) => {
         setTypes(typesData);
@@ -100,17 +116,17 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               </p>
             ) : (
               suggestions.map((suggestion) => (
-                <button
+                <Link
                   key={suggestion.id}
-                  type="button"
+                  href={suggestionHref(suggestion)}
                   onClick={onClose}
-                  className="flex items-center justify-between rounded-lg px-3 py-3 text-left text-sm text-gs-300 hover:bg-gs-900 cursor-pointer"
+                  className="flex items-center justify-between rounded-lg px-3 py-3 text-left text-sm text-gs-300 hover:bg-gs-900"
                 >
                   <span>{suggestion.label}</span>
                   <span className="text-xs text-gs-600 capitalize">
                     {suggestion.type}
                   </span>
-                </button>
+                </Link>
               ))
             )}
           </div>
@@ -123,14 +139,14 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {types.map((type) => (
-                    <button
+                    <Link
                       key={type.id}
-                      type="button"
-                      onClick={() => setQuery(type.name)}
-                      className="rounded-full border border-gs-800 px-3 py-1.5 text-sm text-gs-300 hover:border-gs-600 hover:text-off-white cursor-pointer"
+                      href={`/?type=${type.slug}`}
+                      onClick={onClose}
+                      className="rounded-full border border-gs-800 px-3 py-1.5 text-sm text-gs-300 hover:border-gs-600 hover:text-off-white"
                     >
                       {type.name}
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -143,14 +159,14 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {mostUsedTags.map((tag) => (
-                    <button
+                    <Link
                       key={tag.id}
-                      type="button"
-                      onClick={() => setQuery(tag.name)}
-                      className="rounded-full bg-gs-900 px-3 py-1.5 text-sm text-gs-400 hover:text-off-white cursor-pointer"
+                      href={`/?tag=${tag.slug}`}
+                      onClick={onClose}
+                      className="rounded-full bg-gs-900 px-3 py-1.5 text-sm text-gs-400 hover:text-off-white"
                     >
                       #{tag.name}
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </section>

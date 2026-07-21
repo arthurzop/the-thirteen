@@ -13,8 +13,10 @@ type ReferenceBrowserProps = {
   tags: FilterOption[];
   references: ReferenceDetailData[];
   searchQuery?: string;
+  initialTypeSlug?: string;
+  initialTagSlug?: string;
+  initialReferenceSlug?: string;
 };
-
 const EMPTY_FILTERS: FilterState = { typeSlugs: [], tagSlugs: [] };
 
 export default function ReferenceBrowser({
@@ -22,11 +24,22 @@ export default function ReferenceBrowser({
   tags,
   references,
   searchQuery = "",
+  initialTypeSlug,
+  initialTagSlug,
+  initialReferenceSlug,
 }: ReferenceBrowserProps) {
-  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [selected, setSelected] = useState<ReferenceDetailData | null>(null);
+  const [filters, setFilters] = useState<FilterState>(() => ({
+    typeSlugs: initialTypeSlug ? [initialTypeSlug] : [],
+    tagSlugs: initialTagSlug ? [initialTagSlug] : [],
+  }));
 
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+
+  const [selected, setSelected] = useState<ReferenceDetailData | null>(() =>
+    initialReferenceSlug
+      ? (references.find((r) => r.slug === initialReferenceSlug) ?? null)
+      : null,
+  );
   const filteredReferences = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 

@@ -66,7 +66,7 @@ export default async function About() {
               Curated references collected <br /> over time.
             </p>
           </div>
-          <div className="flex-1 border-t pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
+          <div className="flex-1 border-t md:border-t-0 pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
             <h1 className="text-5xl font-medium">
               {stats.types.toLocaleString()}
             </h1>
@@ -75,7 +75,7 @@ export default async function About() {
               Object categories used to <br /> organize the archive.
             </p>
           </div>
-          <div className="flex-1 border-t pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
+          <div className="flex-1 border-t md:border-t-0 pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
             <h1 className="text-5xl font-medium">
               {stats.areas.toLocaleString()}
             </h1>
@@ -84,7 +84,7 @@ export default async function About() {
               Design disciplines that provide context for each reference.
             </p>
           </div>
-          <div className="flex-1 border-t pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
+          <div className="flex-1 border-t md:border-t-0 pt-8 md:border-s border-gs-900 md:ps-8 md:pt-0">
             <h1 className="text-5xl font-medium">
               {stats.tags.toLocaleString()}
             </h1>
@@ -109,14 +109,14 @@ export default async function About() {
               typography, motion, editorial, photography and digital products.
             </p>
           </div>
-          <div className="flex flex-1 flex-col border-t py-6 md:border-s border-gs-900 md:ps-6 md:pt-0">
+          <div className="flex flex-1 flex-col border-t md:border-t-0 py-6 md:border-s border-gs-900 md:ps-6 md:pt-0">
             <p className="font-medium text-gs-200">Curated Collections</p>
             <p className="leading-5 text-gs-400">
               Browse handpicked groups of references organized around specific
               themes, aesthetics and creative directions.
             </p>
           </div>
-          <div className="flex flex-1 flex-col border-t py-6 md:border-s border-gs-900 md:ps-6 md:pt-0">
+          <div className="flex flex-1 flex-col border-t md:border-t-0 py-6 md:border-s border-gs-900 md:ps-6 md:pt-0">
             <p className="font-medium text-gs-200">External Resources</p>
             <p className="leading-5 text-gs-400">
               Whenever available, visit the original source to explore projects,
