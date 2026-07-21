@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import FilterBar from "@/components/reference/filterBar";
 import ReferenceGrid from "@/components/reference/referenceGrid";
@@ -17,7 +17,6 @@ type ReferenceBrowserProps = {
   initialTagSlug?: string;
   initialReferenceSlug?: string;
 };
-const EMPTY_FILTERS: FilterState = { typeSlugs: [], tagSlugs: [] };
 
 export default function ReferenceBrowser({
   types,
@@ -40,6 +39,22 @@ export default function ReferenceBrowser({
       ? (references.find((r) => r.slug === initialReferenceSlug) ?? null)
       : null,
   );
+
+  // Roda de novo toda vez que você navega pra Home com parâmetros diferentes
+  // (ex: clicando num link do SearchOverlay), mesmo sem desmontar o componente.
+  useEffect(() => {
+    setFilters({
+      typeSlugs: initialTypeSlug ? [initialTypeSlug] : [],
+      tagSlugs: initialTagSlug ? [initialTagSlug] : [],
+    });
+  }, [initialTypeSlug, initialTagSlug]);
+
+  useEffect(() => {
+    if (!initialReferenceSlug) return;
+    const found = references.find((r) => r.slug === initialReferenceSlug);
+    if (found) setSelected(found);
+  }, [initialReferenceSlug, references]);
+
   const filteredReferences = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 

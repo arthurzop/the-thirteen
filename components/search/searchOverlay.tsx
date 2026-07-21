@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
+import { Search, X, Loader2 } from "lucide-react";
 
 import { searchSuggestions } from "@/actions/search/suggestions";
 import { getTypes } from "@/actions/types/get";
 import { getMostUsedTags } from "@/actions/tags/get-with-counts";
 import { getCollections } from "@/actions/collections/get";
+import { useDebounce } from "@/hooks/use-debounce";
 import type { SearchSuggestion } from "@/types/search";
 import type { FilterOption } from "@/types/filters";
 
@@ -33,7 +34,7 @@ function suggestionHref(suggestion: SearchSuggestion): string {
     case "type":
       return `/?type=${suggestion.slug}`;
     case "area":
-      return `/?type=${suggestion.slug}`; // ajusta se Area precisar de outro parâmetro
+      return `/?type=${suggestion.slug}`;
     case "tag":
       return `/?tag=${suggestion.slug}`;
     default:
@@ -44,9 +45,13 @@ function suggestionHref(suggestion: SearchSuggestion): string {
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [types, setTypes] = useState<FilterOption[]>([]);
   const [mostUsedTags, setMostUsedTags] = useState<TagWithCount[]>([]);
   const [collections, setCollections] = useState<CollectionPreview[]>([]);
+
+  const debouncedQuery = useDebounce(query, 250);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -68,21 +73,30 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    const trimmed = query.trim();
+    const trimmed = debouncedQuery.trim();
+
     if (!trimmed) {
       setSuggestions([]);
+      setHasSearched(false);
+      setIsSearching(false);
       return;
     }
 
     let cancelled = false;
+    setIsSearching(true);
+
     searchSuggestions(trimmed).then((results) => {
-      if (!cancelled) setSuggestions(results);
+      if (!cancelled) {
+        setSuggestions(results);
+        setHasSearched(true);
+        setIsSearching(false);
+      }
     });
 
     return () => {
       cancelled = true;
     };
-  }, [query]);
+  }, [debouncedQuery]);
 
   if (!isOpen) return null;
 
@@ -110,10 +124,20 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       <div className="flex-1 overflow-y-auto px-4 py-6">
         {query.trim() ? (
           <div className="flex flex-col gap-1">
-            {suggestions.length === 0 ? (
-              <p className="py-8 text-center text-sm text-gs-500">
-                No results found.
-              </p>
+            {isSearching ? (
+              <div className="flex justify-center py-8">
+                <Loader2
+                  size={18}
+                  strokeWidth={1.5}
+                  className="animate-spin text-gs-600"
+                />
+              </div>
+            ) : suggestions.length === 0 ? (
+              hasSearched && (
+                <p className="py-8 text-center text-sm text-gs-500">
+                  No results found.
+                </p>
+              )
             ) : (
               suggestions.map((suggestion) => (
                 <Link
