@@ -52,8 +52,8 @@ export default function CollectionFormPanel({
   }, [isOpen, initialData]);
 
   async function handleSubmit() {
-    if (!title || (!isEditing && coverImage.length === 0)) {
-      setError("Title and Cover Image are required.");
+    if (!title) {
+      setError("Title is required.");
       return;
     }
 
@@ -145,7 +145,10 @@ export default function CollectionFormPanel({
 
           <div className="flex flex-col gap-2">
             <label className="text-xs tracking-wide text-gs-500 uppercase">
-              Cover Image{isEditing ? " (leave empty to keep current)" : "*"}
+              Cover Image
+              {isEditing
+                ? " (leave empty to keep current)"
+                : " (optional — placeholder used if empty)"}
             </label>
             {isEditing && initialData && coverImage.length === 0 && (
               // eslint-disable-next-line @next/next/no-img-element

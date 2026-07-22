@@ -21,7 +21,8 @@ export default function FilterBar({
   onFiltersChange,
   onViewModeChange,
 }: FilterBarProps) {
-  const [committedFilters, setCommittedFilters] = useState<FilterState>(EMPTY_FILTERS);
+  const [committedFilters, setCommittedFilters] =
+    useState<FilterState>(EMPTY_FILTERS);
   const [draftFilters, setDraftFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -64,6 +65,9 @@ export default function FilterBar({
       <TypesMenu
         types={types}
         selectedSlugs={committedFilters.typeSlugs}
+        activeFilterCount={
+          committedFilters.typeSlugs.length + committedFilters.tagSlugs.length
+        }
         onToggle={handleQuickToggleType}
         onOpenFilters={handleOpenSidebar}
       />

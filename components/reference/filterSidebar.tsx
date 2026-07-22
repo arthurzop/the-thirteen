@@ -55,7 +55,7 @@ export default function FiltersSidebar({
         className="fixed inset-0 z-20 bg-overlay"
       />
 
-      <aside className="fixed top-0 right-0 z-30 flex h-screen w-full flex-col justify-between border-l border-gs-800 bg-night-black p-6 sm:w-[320px]">
+      <aside className="fixed top-0 right-0 z-30 flex h-screen w-full flex-col justify-between border-l border-gs-800 bg-night-black p-6 sm:w-[320px] overflow-y-hidden">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-medium text-off-white">Filters</h2>
@@ -154,7 +154,7 @@ export default function FiltersSidebar({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 border-t border-gs-800 pt-6 h-">
+        <div className="flex items-center gap-3 mt-3 pt-3">
           <button
             type="button"
             onClick={onClear}
