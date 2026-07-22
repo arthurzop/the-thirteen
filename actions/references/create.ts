@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
+import { REFERENCE_PLACEHOLDER } from "@/lib/cloudinary/placeholders";
+
 async function findOrCreateTag(name: string) {
   const slug = slugify(name);
   const existing = await prisma.tag.findUnique({ where: { slug } });
@@ -26,11 +28,14 @@ export async function createReference(formData: FormData) {
 
   const linksRaw = formData.get("links") as string | null;
 
-  if (!title || !typeId || !mainImageFile || mainImageFile.size === 0) {
-    return { error: "Title, Type and Main Image are required." };
+  if (!title || !typeId) {
+    return { error: "Title and Type are required." };
   }
 
-  const mainImage = await uploadImage(mainImageFile);
+  const mainImage =
+    mainImageFile && mainImageFile.size > 0
+      ? await uploadImage(mainImageFile)
+      : REFERENCE_PLACEHOLDER;
 
   const gallery = await Promise.all(
     galleryFiles

@@ -86,12 +86,8 @@ export default function ReferenceFormPanel({
   const availableAreas = areas.filter((area) => area.typeId === typeId[0]);
 
   async function handleSubmit() {
-    if (
-      !title ||
-      typeId.length === 0 ||
-      (!isEditing && mainImage.length === 0)
-    ) {
-      setError("Title, Type and Main Image are required.");
+    if (!title || typeId.length === 0) {
+      setError("Title and Type are required.");
       return;
     }
 
@@ -230,7 +226,10 @@ export default function ReferenceFormPanel({
 
           <div className="flex flex-col gap-2">
             <label className="text-xs tracking-wide text-gs-500 uppercase">
-              Main Image{isEditing ? " (leave empty to keep current)" : "*"}
+              Main Image
+              {isEditing
+                ? " (leave empty to keep current)"
+                : " (optional — placeholder used if empty)"}
             </label>
             {isEditing && initialData && mainImage.length === 0 && (
               // eslint-disable-next-line @next/next/no-img-element
