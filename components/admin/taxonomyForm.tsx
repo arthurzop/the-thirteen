@@ -30,6 +30,14 @@ export default function TaxonomyForm({
     }
   }, [isOpen, initialName]);
 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
+
   async function handleSubmit() {
     if (!name.trim()) {
       setError("Name is required.");
@@ -47,6 +55,20 @@ export default function TaxonomyForm({
     }
   }
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleSubmit();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, name]);
+
   if (!isOpen) return null;
 
   return (
@@ -58,9 +80,10 @@ export default function TaxonomyForm({
           <button
             type="button"
             onClick={onClose}
-            className="text-gs-500 hover:text-off-white cursor-pointer"
+            aria-label="Close"
+            className="cursor-pointer flex items-center gap-1 text-gs-500 hover:text-off-white"
           >
-            <X size={16} strokeWidth={1.5} />
+            <p className=" text-xs">ESC</p> <X size={16} strokeWidth={1.5} />
           </button>
         </div>
         <div className="flex justify-end">
