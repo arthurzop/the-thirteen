@@ -18,7 +18,7 @@ export default function LinksInput({ links, onChange }: LinksInputProps) {
   }
 
   function addLink() {
-    onChange([...links, { label: "", url: "" }]);
+    onChange([...links, { label: "Official Website", url: "" }]);
   }
 
   function removeLink(index: number) {

@@ -20,14 +20,14 @@ export default function CollectionReferenceBrowser({
           key={reference.id}
           type="button"
           onClick={() => setSelected(reference)}
-          className="flex w-64 shrink-0 flex-col gap-2 text-left cursor-pointer p-2 bg-night-black rounded-2xl border border-gs-900"
+          className="group flex w-64 shrink-0 flex-col gap-2 text-left cursor-pointer p-2 bg-night-black rounded-2xl border border-gs-900"
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
             <Image
               src={reference.mainImage.url}
               alt={reference.title}
               fill
-              className="object-cover"
+              className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
             />
           </div>
           <div>

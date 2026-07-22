@@ -12,7 +12,7 @@ export default function CollectionCard({
       href={`/collections/${collection.slug}`}
       className="group flex flex-col gap-3 bg-night-black p-2 rounded-2xl border border-gs-900"
     >
-      <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-gs-900">
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
         <Image
           src={collection.coverImage.url}
           alt={collection.title}
