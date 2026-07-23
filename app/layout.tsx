@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { Geist } from "next/font/google";
+import RouteProgressBar from "@/components/ui/routeProgressBar";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -36,7 +38,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={geist.className}>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}>
+          <RouteProgressBar />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }
