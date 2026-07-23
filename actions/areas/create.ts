@@ -9,7 +9,7 @@ export async function createArea({
 }: {
   name: string;
   typeId: string;
-}): Promise<{ error?: string }> {
+}): Promise<{ error?: string; id?: string }> {
   const slug = slugify(name);
   const existing = await prisma.area.findFirst({ where: { typeId, slug } });
 
@@ -17,7 +17,7 @@ export async function createArea({
     return { error: "An Area with this name already exists for this Type." };
   }
 
-  await prisma.area.create({ data: { name, slug, typeId } });
+  const created = await prisma.area.create({ data: { name, slug, typeId } });
   revalidateReferences();
-  return {};
+  return { id: created.id };
 }

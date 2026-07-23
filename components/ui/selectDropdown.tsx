@@ -24,8 +24,10 @@ export default function SelectDropdown({
 }: SelectDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -39,8 +41,22 @@ export default function SelectDropdown({
   }, []);
 
   useEffect(() => {
-    if (isOpen) searchRef.current?.focus();
+    if (isOpen) {
+      searchRef.current?.focus();
+      setHighlightedIndex(0);
+    } else {
+      setHighlightedIndex(-1);
+    }
   }, [isOpen]);
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [query]);
+
+  useEffect(() => {
+    if (highlightedIndex < 0) return;
+    optionRefs.current[highlightedIndex]?.scrollIntoView({ block: "nearest" });
+  }, [highlightedIndex]);
 
   function toggleValue(value: string) {
     if (multiple) {
@@ -64,6 +80,24 @@ export default function SelectDropdown({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(query.trim().toLowerCase()),
   );
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightedIndex((i) => Math.min(i + 1, filteredOptions.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightedIndex((i) => Math.max(i - 1, 0));
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      const option = filteredOptions[highlightedIndex];
+      if (option) toggleValue(option.value);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setIsOpen(false);
+      setQuery("");
+    }
+  }
 
   const label =
     selected.length === 0
@@ -109,6 +143,7 @@ export default function SelectDropdown({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Search..."
             className="w-full border-b border-gs-800 bg-transparent px-3 py-2 text-sm text-off-white outline-none placeholder:text-gs-600"
           />
@@ -119,12 +154,20 @@ export default function SelectDropdown({
                 No options found
               </li>
             ) : (
-              filteredOptions.map((option) => (
+              filteredOptions.map((option, index) => (
                 <li key={option.value}>
                   <button
+                    ref={(el) => {
+                      optionRefs.current[index] = el;
+                    }}
                     type="button"
                     onClick={() => toggleValue(option.value)}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gs-300 hover:bg-gs-800 cursor-pointer"
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm cursor-pointer ${
+                      index === highlightedIndex
+                        ? "bg-gs-800 text-off-white"
+                        : "text-gs-300 hover:bg-gs-800"
+                    }`}
                   >
                     {multiple && (
                       <input

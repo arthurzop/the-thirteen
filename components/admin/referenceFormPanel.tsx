@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Plus, X } from "lucide-react";
 
 import ImageDropzone from "@/components/ui/imageDropzone";
 import SelectDropdown from "@/components/ui/selectDropdown";
@@ -12,6 +12,7 @@ import MetadataInput, {
 } from "@/components/admin/metadataInput";
 import { createReference } from "@/actions/references/create";
 import { updateReference } from "@/actions/references/update";
+import { createArea } from "@/actions/areas/create";
 import type { FilterOption } from "@/types/filters";
 import type { AdminReferenceRow } from "@/types/reference";
 import CharCounter from "../ui/charCounter";
@@ -36,7 +37,7 @@ export default function ReferenceFormPanel({
   initialData,
 }: ReferenceFormPanelProps) {
   const isEditing = Boolean(initialData);
-
+  const isCreatingAreaRef = useRef(false);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [description, setDescription] = useState("");
@@ -52,6 +53,13 @@ export default function ReferenceFormPanel({
   const [keptGalleryPublicIds, setKeptGalleryPublicIds] = useState<string[]>(
     [],
   );
+
+  const [extraAreas, setExtraAreas] = useState<
+    (FilterOption & { typeId: string })[]
+  >([]);
+  const [newAreaName, setNewAreaName] = useState("");
+  const [isCreatingArea, setIsCreatingArea] = useState(false);
+  const [areaError, setAreaError] = useState("");
 
   useEffect(() => {
     if (!isOpen) return;
@@ -80,10 +88,58 @@ export default function ReferenceFormPanel({
       setGallery([]);
       setLinks([]);
     }
+    setExtraAreas([]);
+    setNewAreaName("");
+    setAreaError("");
     setError("");
   }, [isOpen, initialData]);
 
-  const availableAreas = areas.filter((area) => area.typeId === typeId[0]);
+  const allAreas = [
+    ...areas,
+    ...extraAreas.filter((extra) => !areas.some((a) => a.id === extra.id)),
+  ];
+  const availableAreas = allAreas.filter((area) => area.typeId === typeId[0]);
+
+  async function handleCreateArea() {
+    if (isCreatingAreaRef.current) return;
+
+    const name = newAreaName.trim();
+    if (!name || typeId.length === 0) return;
+
+    const isDuplicate = availableAreas.some(
+      (a) => a.name.toLowerCase() === name.toLowerCase(),
+    );
+    if (isDuplicate) {
+      setAreaError("An Area with this name already exists for this Type.");
+      return;
+    }
+
+    isCreatingAreaRef.current = true;
+    setIsCreatingArea(true);
+    setAreaError("");
+
+    try {
+      const result = await createArea({ name, typeId: typeId[0] });
+      if (result.error || !result.id) {
+        setAreaError(result.error ?? "Something went wrong.");
+        return;
+      }
+
+      setExtraAreas((prev) => [
+        ...prev,
+        { id: result.id!, name, slug: "", typeId: typeId[0] },
+      ]);
+      setAreaIds((prev) => [...prev, result.id!]);
+      setNewAreaName("");
+    } catch (err) {
+      setAreaError(
+        err instanceof Error ? err.message : "Something went wrong.",
+      );
+    } finally {
+      isCreatingAreaRef.current = false;
+      setIsCreatingArea(false);
+    }
+  }
 
   async function handleSubmit() {
     if (!title || typeId.length === 0) {
@@ -185,6 +241,12 @@ export default function ReferenceFormPanel({
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value.slice(0, 100))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
             maxLength={100}
             placeholder="e.g. Neue Haas Grotesk"
             className="rounded-lg border border-gs-800 bg-night-black px-3 py-2 text-sm text-off-white outline-none focus:border-gs-600"
@@ -202,6 +264,12 @@ export default function ReferenceFormPanel({
               value={subtitle}
               maxLength={40}
               onChange={(e) => setSubtitle(e.target.value.slice(0, 40))}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
               placeholder="e.g. Typeface, Studio, Singer & Songwriter..."
               className="rounded-lg border border-gs-800 bg-night-black px-3 py-2 text-sm text-off-white outline-none focus:border-gs-600"
             />
@@ -309,9 +377,11 @@ export default function ReferenceFormPanel({
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs tracking-wide text-gs-500 uppercase">
-                Area
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs tracking-wide text-gs-500 uppercase">
+                  Area
+                </label>
+              </div>
               <SelectDropdown
                 options={availableAreas.map((a) => ({
                   label: a.name,
@@ -323,6 +393,42 @@ export default function ReferenceFormPanel({
                 multiple
               />
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2 -mt-2">
+            <div className="flex items-center gap-2">
+              <input
+                value={newAreaName}
+                maxLength={30}
+                disabled={typeId.length === 0 || isCreatingArea}
+                onChange={(e) => {
+                  setNewAreaName(e.target.value.slice(0, 30));
+                  setAreaError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleCreateArea();
+                  }
+                }}
+                placeholder={
+                  typeId.length === 0 ? "Select a Type first" : "New area name"
+                }
+                className="flex-1 rounded-lg border border-gs-800 bg-night-black px-3 py-2 text-sm text-off-white outline-none focus:border-gs-600 disabled:opacity-40"
+              />
+              <button
+                type="button"
+                onClick={handleCreateArea}
+                disabled={
+                  typeId.length === 0 || !newAreaName.trim() || isCreatingArea
+                }
+                className="flex shrink-0 items-center gap-1 rounded-lg border border-gs-800 px-3 py-2 text-xs text-gs-300 hover:border-gs-600 hover:text-off-white disabled:opacity-40 cursor-pointer"
+              >
+                <Plus size={14} strokeWidth={1.5} />
+                {isCreatingArea ? "Adding..." : "Add Area"}
+              </button>
+            </div>
+            {areaError && <p className="text-xs text-red-400">{areaError}</p>}
           </div>
 
           <div className="flex flex-col gap-2">

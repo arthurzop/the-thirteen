@@ -55,11 +55,13 @@ export default function SearchInput({
 }: SearchInputProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const debouncedValue = useDebounce(value, 250);
 
@@ -118,6 +120,17 @@ export default function SearchInput({
     onQueryChange?.(debouncedValue);
   }, [debouncedValue, onQueryChange]);
 
+  useEffect(() => {
+    setHighlightedIndex(suggestions.length > 0 ? 0 : -1);
+  }, [suggestions]);
+
+  useEffect(() => {
+    if (highlightedIndex < 0) return;
+    suggestionRefs.current[highlightedIndex]?.scrollIntoView({
+      block: "nearest",
+    });
+  }, [highlightedIndex]);
+
   function handleClear() {
     setValue("");
     setSuggestions([]);
@@ -129,6 +142,25 @@ export default function SearchInput({
     setValue(suggestion.label);
     setIsFocused(false);
     onSelect?.(suggestion);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (!showDropdown || suggestions.length === 0) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightedIndex((i) => Math.min(i + 1, suggestions.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightedIndex((i) => Math.max(i - 1, 0));
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      const suggestion = suggestions[highlightedIndex];
+      if (suggestion) handleSelect(suggestion);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setIsFocused(false);
+    }
   }
 
   const showDropdown = isFocused && value.trim().length > 0;
@@ -152,6 +184,7 @@ export default function SearchInput({
           value={value}
           onChange={(event) => setValue(event.target.value)}
           onFocus={() => setIsFocused(true)}
+          onKeyDown={handleKeyDown}
           placeholder="Search design references"
           className="flex-1 bg-transparent text-sm text-off-white outline-none placeholder:text-gs-600"
         />
@@ -176,15 +209,23 @@ export default function SearchInput({
         <div className="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-2xl border border-gs-600 bg-night-black">
           {suggestions.length > 0 ? (
             <ul className="max-h-64 overflow-y-auto">
-              {suggestions.map((suggestion) => {
+              {suggestions.map((suggestion, index) => {
                 const Icon = typeIcons[suggestion.type];
 
                 return (
                   <li key={suggestion.id}>
                     <button
+                      ref={(el) => {
+                        suggestionRefs.current[index] = el;
+                      }}
                       type="button"
                       onClick={() => handleSelect(suggestion)}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-gs-400 transition-colors hover:bg-gs-800 cursor-pointer"
+                      onMouseEnter={() => setHighlightedIndex(index)}
+                      className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors cursor-pointer ${
+                        index === highlightedIndex
+                          ? "bg-gs-800 text-off-white"
+                          : "text-gs-400 hover:bg-gs-800"
+                      }`}
                     >
                       <Icon
                         size={14}

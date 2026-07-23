@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SearchInput from "@/components/ui/SearchInput";
+import SearchInput from "@/components/search/SearchInput";
 import ReferenceBrowser from "@/components/reference/referenceBrowser";
 import type { FilterOption } from "@/types/filters";
 import type { ReferenceDetailData } from "@/types/reference";
