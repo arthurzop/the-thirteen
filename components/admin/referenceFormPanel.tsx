@@ -218,7 +218,7 @@ export default function ReferenceFormPanel({
     <>
       <div onClick={onClose} className="fixed inset-0 z-40 bg-overlay" />
 
-      <aside className="fixed top-0 right-0 z-50 flex h-screen w-[480px] flex-col justify-between border-l border-gs-800 bg-true-black">
+      <aside className="fixed top-0 right-0 z-50 flex h-screen w-120 flex-col justify-between border-l border-gs-800 bg-true-black">
         <div className="flex flex-col gap-6 overflow-y-auto p-8">
           <div className="flex items-start justify-between">
             <div>
