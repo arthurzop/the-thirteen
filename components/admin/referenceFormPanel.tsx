@@ -183,14 +183,21 @@ export default function ReferenceFormPanel({
       if (mainImage[0]) formData.set("mainImage", mainImage[0]);
       gallery.forEach((file) => formData.append("gallery", file));
 
+      let result: { error?: string };
+
       if (isEditing && initialData) {
         formData.set(
           "keepGalleryPublicIds",
           JSON.stringify(keptGalleryPublicIds),
         );
-        await updateReference(initialData.id, formData);
+        result = await updateReference(initialData.id, formData);
       } else {
-        await createReference(formData);
+        result = await createReference(formData);
+      }
+
+      if (result?.error) {
+        setError(result.error);
+        return;
       }
 
       onSaved();

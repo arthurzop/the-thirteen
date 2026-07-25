@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
 
 import Chip from "@/components/ui/chip";
+import { getBlurredBackgroundUrl } from "@/lib/cloudinary/transform";
 import type { ReferenceDetailData } from "@/types/reference";
 
 type ReferenceModalProps = {
@@ -17,11 +18,15 @@ export default function ReferenceModal({
   onClose,
 }: ReferenceModalProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const [isBackgroundLoaded, setIsBackgroundLoaded] = useState(false);
   // Reseta pro início toda vez que abre uma Reference diferente
   useEffect(() => {
     setActiveIndex(0);
   }, [reference?.id]);
+
+  useEffect(() => {
+    setIsBackgroundLoaded(false);
+  }, [activeIndex, reference?.id]);
 
   useEffect(() => {
     if (!reference) return;
@@ -103,7 +108,23 @@ export default function ReferenceModal({
         <div className="flex flex-col md:flex-row flex-1 items-stretch justify-between gap-2 overflow-y-auto overflow-x-hidden md:overflow-hidden">
           {/* imagens */}
           <div className="flex flex-1 flex-col gap-2">
-            <div className="relative aspect-video md:h-auto md:flex-1 overflow-hidden rounded-2xl">
+            <div className="relative aspect-video md:h-auto md:flex-1 overflow-hidden rounded-2xl bg-true-black">
+              <Image
+                src={getBlurredBackgroundUrl(activeImage.url)}
+                alt=""
+                fill
+                aria-hidden
+                priority
+                onLoad={() => setIsBackgroundLoaded(true)}
+                className={`object-cover scale-110 transition-opacity duration-300 ease-in-out ${
+                  isBackgroundLoaded ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              <div
+                className={`absolute inset-0 bg-true-black/55 transition-opacity duration-300 ease-in-out ${
+                  isBackgroundLoaded ? "opacity-100" : "opacity-0"
+                }`}
+              />
               <Image
                 src={activeImage.url}
                 alt={activeImage.alt ?? reference.title}

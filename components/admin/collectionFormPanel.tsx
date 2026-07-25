@@ -67,10 +67,17 @@ export default function CollectionFormPanel({
       referenceIds.forEach((id) => formData.append("referenceIds", id));
       if (coverImage[0]) formData.set("coverImage", coverImage[0]);
 
+      let result: { error?: string };
+
       if (isEditing && initialData) {
-        await updateCollection(initialData.id, formData);
+        result = await updateCollection(initialData.id, formData);
       } else {
-        await createCollection(formData);
+        result = await createCollection(formData);
+      }
+
+      if (result?.error) {
+        setError(result.error);
+        return;
       }
 
       onSaved();

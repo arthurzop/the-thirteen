@@ -15,7 +15,9 @@ async function findOrCreateTag(name: string) {
   return created.id;
 }
 
-export async function createReference(formData: FormData) {
+export async function createReference(
+  formData: FormData,
+): Promise<{ error?: string }> {
   const title = formData.get("title") as string;
   const subtitle = formData.get("subtitle") as string | null;
   const description = formData.get("description") as string | null;
@@ -67,4 +69,5 @@ export async function createReference(formData: FormData) {
   });
 
   revalidateReferences();
+  return {};
 }

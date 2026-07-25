@@ -7,7 +7,9 @@ import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
 import { COLLECTION_PLACEHOLDER } from "@/lib/cloudinary/placeholders";
 
-export async function createCollection(formData: FormData) {
+export async function createCollection(
+  formData: FormData,
+): Promise<{ error?: string }> {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string | null;
   const referenceIds = formData.getAll("referenceIds") as string[];
@@ -34,4 +36,5 @@ export async function createCollection(formData: FormData) {
   });
 
   revalidateReferences();
+  return {};
 }

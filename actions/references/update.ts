@@ -1,10 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { uploadImage, deleteImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
+
 async function findOrCreateTag(name: string) {
   const slug = slugify(name);
   const existing = await prisma.tag.findUnique({ where: { slug } });
@@ -13,7 +13,10 @@ async function findOrCreateTag(name: string) {
   return created.id;
 }
 
-export async function updateReference(id: string, formData: FormData) {
+export async function updateReference(
+  id: string,
+  formData: FormData,
+): Promise<{ error?: string }> {
   const title = formData.get("title") as string;
   const subtitle = formData.get("subtitle") as string | null;
   const description = formData.get("description") as string | null;
@@ -26,7 +29,14 @@ export async function updateReference(id: string, formData: FormData) {
   const newGalleryFiles = formData.getAll("gallery") as File[];
   const linksRaw = formData.get("links") as string | null;
 
-  const existing = await prisma.reference.findUniqueOrThrow({ where: { id } });
+  if (!title || !typeId) {
+    return { error: "Title and Type are required." };
+  }
+
+  const existing = await prisma.reference.findUnique({ where: { id } });
+  if (!existing) {
+    return { error: "Reference not found." };
+  }
 
   const mainImage =
     newMainImageFile && newMainImageFile.size > 0
@@ -84,4 +94,5 @@ export async function updateReference(id: string, formData: FormData) {
   });
 
   revalidateReferences();
+  return {};
 }
