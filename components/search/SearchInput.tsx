@@ -106,7 +106,7 @@ export default function SearchInput({
 
     onSearch(query).then((results) => {
       if (!cancelled) {
-        setSuggestions(results);
+        setSuggestions(results.filter((r) => r.type !== "collection"));
         setHasSearched(true);
       }
     });

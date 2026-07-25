@@ -4,19 +4,24 @@ import { prisma } from "@/lib/prisma";
 import { uploadImage, deleteImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
+import { collectionSchema } from "@/lib/validations/collection";
 
 export async function updateCollection(
   id: string,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string | null;
-  const referenceIds = formData.getAll("referenceIds") as string[];
-  const newCoverImageFile = formData.get("coverImage") as File | null;
+  const parsed = collectionSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    referenceIds: formData.getAll("referenceIds"),
+  });
 
-  if (!title) {
-    return { error: "Title is required." };
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
   }
+
+  const { title, description, referenceIds } = parsed.data;
+  const newCoverImageFile = formData.get("coverImage") as File | null;
 
   const existing = await prisma.collection.findUnique({ where: { id } });
   if (!existing) {

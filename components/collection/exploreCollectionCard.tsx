@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { CollectionCardData } from "@/types/collections";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 export default function ExploreCollectionCard({
   collection,
@@ -20,7 +21,7 @@ export default function ExploreCollectionCard({
       </div>
       <div className="relative aspect-video w-1/2 overflow-hidden rounded-r-xl bg-gs-900">
         <Image
-          src={collection.coverImage.url}
+          src={getOptimizedUrl(collection.coverImage.url)}
           alt={collection.title}
           fill
           className="object-cover"

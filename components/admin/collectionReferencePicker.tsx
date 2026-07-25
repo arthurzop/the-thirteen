@@ -4,6 +4,7 @@ import { useState } from "react";
 import { GripVertical, Search, X } from "lucide-react";
 import Image from "next/image";
 import type { AdminReferenceRow } from "@/types/reference";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 type CollectionReferencePickerProps = {
   allReferences: AdminReferenceRow[];
@@ -105,7 +106,7 @@ export default function CollectionReferencePicker({
 
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-gs-900">
                 <Image
-                  src={ref.mainImage.url}
+                  src={getOptimizedUrl(ref.mainImage.url)}
                   alt=""
                   fill
                   className="object-cover"

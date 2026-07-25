@@ -10,6 +10,7 @@ import { updateCollection } from "@/actions/collections/update";
 import type { AdminReferenceRow } from "@/types/reference";
 import type { AdminCollectionRow } from "@/types/collections";
 import CharCounter from "../ui/charCounter";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 type CollectionFormPanelProps = {
   isOpen: boolean;
@@ -160,7 +161,7 @@ export default function CollectionFormPanel({
             {isEditing && initialData && coverImage.length === 0 && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={initialData.coverImage.url}
+                src={getOptimizedUrl(initialData.coverImage.url)}
                 alt=""
                 className="mb-2 h-32 w-full rounded-xl object-cover"
               />

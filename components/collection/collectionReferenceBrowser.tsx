@@ -5,6 +5,7 @@ import ReferenceModal from "@/components/reference/referenceModal";
 import type { ReferenceDetailData } from "@/types/reference";
 import Image from "next/image";
 import { formatTimeAgo } from "@/lib/utils";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 export default function CollectionReferenceBrowser({
   references,
@@ -24,7 +25,7 @@ export default function CollectionReferenceBrowser({
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
             <Image
-              src={reference.mainImage.url}
+              src={getOptimizedUrl(reference.mainImage.url)}
               alt={reference.title}
               fill
               className="object-cover group-hover:scale-[1.02] transition-transform duration-300"

@@ -16,6 +16,7 @@ import { createArea } from "@/actions/areas/create";
 import type { FilterOption } from "@/types/filters";
 import type { AdminReferenceRow } from "@/types/reference";
 import CharCounter from "../ui/charCounter";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 type ReferenceFormPanelProps = {
   isOpen: boolean;
@@ -309,7 +310,7 @@ export default function ReferenceFormPanel({
             {isEditing && initialData && mainImage.length === 0 && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={initialData.mainImage.url}
+                src={getOptimizedUrl(initialData.mainImage.url)}
                 alt=""
                 className="mb-2 h-32 w-full rounded-xl object-cover"
               />

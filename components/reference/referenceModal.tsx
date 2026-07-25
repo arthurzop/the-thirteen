@@ -5,7 +5,10 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
 
 import Chip from "@/components/ui/chip";
-import { getBlurredBackgroundUrl } from "@/lib/cloudinary/transform";
+import {
+  getBlurredBackgroundUrl,
+  getOptimizedUrl,
+} from "@/lib/cloudinary/transform";
 import type { ReferenceDetailData } from "@/types/reference";
 
 type ReferenceModalProps = {
@@ -126,10 +129,10 @@ export default function ReferenceModal({
                 }`}
               />
               <Image
-                src={activeImage.url}
+                src={getOptimizedUrl(activeImage.url)}
                 alt={activeImage.alt ?? reference.title}
                 fill
-                className="object-contain"
+                className="object-contain touch-pinch-zoom"
               />
             </div>
 
@@ -147,7 +150,7 @@ export default function ReferenceModal({
                     }`}
                   >
                     <Image
-                      src={image.url}
+                      src={getOptimizedUrl(image.url)}
                       alt=""
                       fill
                       className="object-cover"

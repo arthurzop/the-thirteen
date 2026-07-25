@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 import type { ReferenceCardData } from "@/types/reference";
 
 type ReferenceCardProps = {
@@ -19,7 +20,7 @@ export default function ReferenceCard({
       className="group relative block w-full overflow-hidden rounded-2xl bg-gs-900 cursor-pointer"
     >
       <Image
-        src={reference.mainImage.url}
+        src={getOptimizedUrl(reference.mainImage.url)}
         alt={reference.mainImage.alt ?? reference.title}
         width={reference.mainImage.width}
         height={reference.mainImage.height}

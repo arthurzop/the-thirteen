@@ -1,28 +1,42 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
 import { COLLECTION_PLACEHOLDER } from "@/lib/cloudinary/placeholders";
+import { collectionSchema } from "@/lib/validations/collection";
 
 export async function createCollection(
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string | null;
-  const referenceIds = formData.getAll("referenceIds") as string[];
-  const coverImageFile = formData.get("coverImage") as File;
+  const parsed = collectionSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    referenceIds: formData.getAll("referenceIds"),
+  });
 
-  if (!title) {
-    return { error: "Title is required." };
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
   }
+
+  const { title, description, referenceIds } = parsed.data;
+  const coverImageFile = formData.get("coverImage") as File;
 
   const coverImage =
     coverImageFile && coverImageFile.size > 0
       ? await uploadImage(coverImageFile)
       : COLLECTION_PLACEHOLDER;
+
+  await prisma.collection.create({
+    data: {
+      title,
+      slug: slugify(title),
+      description: description || null,
+      coverImage,
+      referenceIds,
+    },
+  });
 
   await prisma.collection.create({
     data: {

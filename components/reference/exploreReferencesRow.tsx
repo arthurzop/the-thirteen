@@ -5,6 +5,7 @@ import Image from "next/image";
 import ReferenceModal from "@/components/reference/referenceModal";
 import { formatTimeAgo } from "@/lib/utils";
 import type { ReferenceDetailData } from "@/types/reference";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 export default function ExploreReferencesRow({
   references,
@@ -25,7 +26,7 @@ export default function ExploreReferencesRow({
           >
             <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
               <Image
-                src={reference.mainImage.url}
+                src={getOptimizedUrl(reference.mainImage.url)}
                 alt={reference.title}
                 fill
                 className="object-cover"

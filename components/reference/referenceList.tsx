@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Chip from "@/components/ui/chip";
 import type { ReferenceCardData } from "@/types/reference";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 type ReferenceListRowProps = {
   reference: ReferenceCardData;
@@ -21,7 +22,7 @@ export default function ReferenceListRow({
     >
       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gs-900">
         <Image
-          src={reference.mainImage.url}
+          src={getOptimizedUrl(reference.mainImage.url)}
           alt={reference.mainImage.alt ?? reference.title}
           fill
           className="object-cover"

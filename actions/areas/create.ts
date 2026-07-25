@@ -1,15 +1,21 @@
 "use server";
+
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
+import { areaSchema } from "@/lib/validations/area";
 
-export async function createArea({
-  name,
-  typeId,
-}: {
+export async function createArea(input: {
   name: string;
   typeId: string;
 }): Promise<{ error?: string; id?: string }> {
+  const parsed = areaSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const { name, typeId } = parsed.data;
   const slug = slugify(name);
   const existing = await prisma.area.findFirst({ where: { typeId, slug } });
 

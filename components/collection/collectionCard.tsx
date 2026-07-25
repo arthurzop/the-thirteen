@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { CollectionCardData } from "@/types/collections";
+import { getOptimizedUrl } from "@/lib/cloudinary/transform";
 
 export default function CollectionCard({
   collection,
@@ -14,7 +15,7 @@ export default function CollectionCard({
     >
       <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
         <Image
-          src={collection.coverImage.url}
+          src={getOptimizedUrl(collection.coverImage.url)}
           alt={collection.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-[1.01]"

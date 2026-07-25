@@ -8,3 +8,7 @@ export function getBlurredBackgroundUrl(url: string) {
     "c_fill,w_1200,e_blur:1500,q_auto,f_auto",
   );
 }
+
+export function getOptimizedUrl(url: string) {
+  return withCloudinaryTransform(url, "f_auto,q_auto");
+}

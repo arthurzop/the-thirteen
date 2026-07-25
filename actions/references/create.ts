@@ -1,11 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
 import { REFERENCE_PLACEHOLDER } from "@/lib/cloudinary/placeholders";
+import { referenceSchema } from "@/lib/validations/reference";
 
 async function findOrCreateTag(name: string) {
   const slug = slugify(name);
@@ -18,21 +18,26 @@ async function findOrCreateTag(name: string) {
 export async function createReference(
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const title = formData.get("title") as string;
-  const subtitle = formData.get("subtitle") as string | null;
-  const description = formData.get("description") as string | null;
-  const typeId = formData.get("typeId") as string;
-  const areaIds = formData.getAll("areaIds") as string[];
-  const tagNames = formData.getAll("tagNames") as string[];
+  const parsed = referenceSchema.safeParse({
+    title: formData.get("title"),
+    subtitle: formData.get("subtitle"),
+    description: formData.get("description"),
+    typeId: formData.get("typeId"),
+    areaIds: formData.getAll("areaIds"),
+    tagNames: formData.getAll("tagNames"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const { title, subtitle, description, typeId, areaIds, tagNames } =
+    parsed.data;
+
   const metadataRaw = formData.get("metadata") as string | null;
   const mainImageFile = formData.get("mainImage") as File;
   const galleryFiles = formData.getAll("gallery") as File[];
-
   const linksRaw = formData.get("links") as string | null;
-
-  if (!title || !typeId) {
-    return { error: "Title and Type are required." };
-  }
 
   const mainImage =
     mainImageFile && mainImageFile.size > 0

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { uploadImage, deleteImage } from "@/lib/cloudinary/upload";
 import { slugify } from "@/lib/utils";
 import { revalidateReferences } from "@/lib/revalidate";
+import { referenceSchema } from "@/lib/validations/reference";
 
 async function findOrCreateTag(name: string) {
   const slug = slugify(name);
@@ -17,21 +18,27 @@ export async function updateReference(
   id: string,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const title = formData.get("title") as string;
-  const subtitle = formData.get("subtitle") as string | null;
-  const description = formData.get("description") as string | null;
-  const typeId = formData.get("typeId") as string;
-  const areaIds = formData.getAll("areaIds") as string[];
-  const tagNames = formData.getAll("tagNames") as string[];
+  const parsed = referenceSchema.safeParse({
+    title: formData.get("title"),
+    subtitle: formData.get("subtitle"),
+    description: formData.get("description"),
+    typeId: formData.get("typeId"),
+    areaIds: formData.getAll("areaIds"),
+    tagNames: formData.getAll("tagNames"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const { title, subtitle, description, typeId, areaIds, tagNames } =
+    parsed.data;
+
   const metadataRaw = formData.get("metadata") as string | null;
   const keepGalleryRaw = formData.get("keepGalleryPublicIds") as string | null;
   const newMainImageFile = formData.get("mainImage") as File | null;
   const newGalleryFiles = formData.getAll("gallery") as File[];
   const linksRaw = formData.get("links") as string | null;
-
-  if (!title || !typeId) {
-    return { error: "Title and Type are required." };
-  }
 
   const existing = await prisma.reference.findUnique({ where: { id } });
   if (!existing) {
@@ -43,7 +50,6 @@ export async function updateReference(
       ? await uploadImage(newMainImageFile)
       : existing.mainImage;
 
-  // Se um main image novo substituiu o antigo, apaga o antigo do Cloudinary
   if (
     newMainImageFile &&
     newMainImageFile.size > 0 &&
