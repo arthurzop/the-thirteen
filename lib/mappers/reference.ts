@@ -1,7 +1,8 @@
 import type { Reference, Type, Area, Tag } from "@prisma/client";
 import type { ReferenceDetailData } from "@/types/reference";
 
-type ReferenceWithRelations = Reference & {
+type ReferenceWithRelations = Omit<Reference, "createdAt"> & {
+  createdAt: Date | string;
   type: Type;
   areas: Area[];
   tags: Tag[];
@@ -31,6 +32,6 @@ export function mapReferenceToDetailData(
       slug: area.slug,
     })),
     tags: reference.tags.map((tag) => ({ name: tag.name, slug: tag.slug })),
-    createdAt: reference.createdAt.toISOString(),
+    createdAt: new Date(reference.createdAt).toISOString(),
   };
 }

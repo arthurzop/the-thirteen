@@ -1,8 +1,7 @@
-// lib/revalidate.ts
-
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 export function revalidateReferences() {
+  updateTag("references");
   revalidatePath("/");
   revalidatePath("/explore");
   revalidatePath("/collections");
