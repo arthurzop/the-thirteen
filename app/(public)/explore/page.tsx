@@ -26,10 +26,10 @@ export default async function ExplorePage() {
   const references = rawReferences.map(mapReferenceToDetailData);
 
   return (
-    <div className="flex flex-col gap-6 px-8 py-8">
+    <div className="flex flex-col gap-4 px-4 py-4 md:px-8 md:py-8">
       <div className="flex flex-col border-b border-gs-800 pb-4 gap-1">
         <h1 className="text-xl font-medium text-off-white">Explore</h1>
-        <p className="text-sm text-gs-500 w-1/4 ">
+        <p className="text-sm text-gs-500 md:w-1/4 ">
           Discover and explore a curated collection of design references across
           different categories and themes.
         </p>
@@ -71,7 +71,7 @@ export default async function ExplorePage() {
         {collections.length === 0 ? (
           <p className="text-sm text-gs-500">No collections yet.</p>
         ) : (
-          <div className="flex gap-4 overflow-x-auto pb-2">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
             {collections.map((collection) => (
               <ExploreCollectionCard
                 key={collection.id}

@@ -21,9 +21,9 @@ export default function CollectionReferenceBrowser({
           key={reference.id}
           type="button"
           onClick={() => setSelected(reference)}
-          className="group flex w-64 shrink-0 flex-col gap-2 text-left cursor-pointer p-2 bg-night-black rounded-2xl border border-gs-900"
+          className="group flex w-full md:w-64 shrink-0 flex-col text-left cursor-pointer bg-night-black rounded-2xl border border-gs-900"
         >
-          <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gs-900">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gs-900">
             <Image
               src={getOptimizedUrl(reference.mainImage.url)}
               alt={reference.title}
@@ -31,15 +31,17 @@ export default function CollectionReferenceBrowser({
               className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
             />
           </div>
-          <div>
-            <p className="line-clamp-2 text-sm font-medium text-off-white">
-              {reference.title}
-            </p>
-            {reference.subtitle && (
-              <p className="truncate text-xs text-gs-500">
-                {reference.subtitle}
+          <div className="flex justify-between px-4 py-4">
+            <div className="flex flex-col">
+              <p className="line-clamp-2 text-sm font-medium text-off-white">
+                {reference.title}
               </p>
-            )}
+              {reference.subtitle && (
+                <p className="truncate text-xs text-gs-500">
+                  {reference.subtitle}
+                </p>
+              )}
+            </div>
             <p className="mt-1 text-xs text-gs-600">
               {formatTimeAgo(new Date(reference.createdAt))}
             </p>

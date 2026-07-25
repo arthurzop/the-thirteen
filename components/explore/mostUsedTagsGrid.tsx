@@ -8,7 +8,7 @@ export default function MostUsedTagsGrid({ tags }: { tags: TagWithCount[] }) {
           key={tag.id}
           className="flex items-center gap-3 border border-gs-800 bg-night-black rounded-lg"
         >
-          <span className="text-md font-medium text-gs-400 bg-true-black h-full w-fit px-4 py-3 rounded-l-lg flex items-center border-e border-gs-800">
+          <span className="text-md font-medium text-gs-400 bg-true-black h-full px-4 py-3 rounded-l-lg flex items-center border-e border-gs-800 w-13">
             {String(index + 1).padStart(2, "0")}
           </span>
           <div className="py-2 ">

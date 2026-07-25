@@ -40,7 +40,7 @@ export default async function CollectionDetailPage({
 
         {references.length === 0 ? (
           <p className="py-16 text-center text-sm text-gs-500">
-            This collection has no references yet.
+            This collection has no references yet. 
           </p>
         ) : (
           <CollectionReferenceBrowser references={references} />
