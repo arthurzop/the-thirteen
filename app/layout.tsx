@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import RouteProgressBar from "@/components/ui/routeProgressBar";
+import { Analytics } from "@vercel/analytics/next";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
           <RouteProgressBar />
         </Suspense>
         {children}
+        <Analytics />
       </body>
     </html>
   );
