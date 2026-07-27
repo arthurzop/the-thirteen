@@ -5,6 +5,8 @@ import { getArchiveStats } from "@/actions/stats/get";
 
 const PORTFOLIO_URL = "https://artur-medeiros-26.vercel.app";
 const LINKEDIN_URL = "https://www.linkedin.com/in/arthurzop/";
+const DOCS_URL =
+  "https://artur-medeiros.notion.site/The-Thirteen-3a9ee200270080ce8be0c34012e51055";
 
 export default async function About() {
   const stats = await getArchiveStats();
@@ -172,6 +174,15 @@ export default async function About() {
               className="flex cursor-pointer gap-2 rounded-full border border-gs-900 bg-night-black p-2 px-6 hover:bg-gs-900 w-fit"
             >
               LinkedIn
+              <SquareArrowOutUpRight width={18} strokeWidth={1.5} />
+            </Link>
+            <Link
+              href={DOCS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex cursor-pointer gap-2 rounded-full border border-gs-900 bg-night-black p-2 px-6 hover:bg-gs-900 w-fit"
+            >
+              Documentation
               <SquareArrowOutUpRight width={18} strokeWidth={1.5} />
             </Link>
             {/* <Link href="..." target="_blank" rel="noopener noreferrer" className="...">
