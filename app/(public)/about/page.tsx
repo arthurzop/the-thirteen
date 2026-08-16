@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { getArchiveStats } from "@/actions/stats/get";
 
-const PORTFOLIO_URL = "https://artur-medeiros-26.vercel.app";
+const PORTFOLIO_URL = "https://artur-medeiros.vercel.app";
 const LINKEDIN_URL = "https://www.linkedin.com/in/arthurzop/";
 const DOCS_URL =
   "https://artur-medeiros.notion.site/The-Thirteen-3a9ee200270080ce8be0c34012e51055";
